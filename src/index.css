@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+/* Thmanyah Sans — licensed family, served from the project's own assets.
+   `swap` keeps text readable during load; the preloads in index.html mean the
+   swap almost never becomes visible. */
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyahsans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  /* Arabic + Arabic Supplement/Extended, plus Arabic-Indic digits. */
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyahsans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("/fonts/thmanyahsans-Bold.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Surfaces */
+  --color-bg: #faf9f7;
+  --color-bg-elevated: #ffffff;
+  --color-surface: #f2f1ed;
+  --color-surface-strong: #e9e7e1;
+  --color-border: rgba(20, 19, 15, 0.08);
+  --color-border-strong: rgba(20, 19, 15, 0.14);
+
+  /* Ink */
+  --color-ink: #1c1c1e;
+  --color-ink-secondary: #6e6e73;
+  --color-ink-tertiary: #a1a09b;
+  --color-on-dark: #f5f4f1;
+  --color-on-dark-secondary: rgba(245, 244, 241, 0.64);
+
+  /* Accent — used sparingly: send button, active states, links */
+  --color-accent: #3a5cff;
+  --color-accent-hover: #2f4ce0;
+  --color-accent-soft: #eaeeff;
+  --color-on-accent: #ffffff;
+
+  /* Card ground colors — desaturated, no neon */
+  --color-card-graphite: #17181c;
+  --color-card-plum: #221925;
+  --color-card-pine: #131d1a;
+
+  /* Identity glow — the one signature ambient hue, used only as soft blurred light */
+  --color-glow: #ff7a52;
+
+  /* Journey category tones — muted, low-saturation family, used only as small marks */
+  --color-tone-education: #6b7fd6;
+  --color-tone-professional: #d98c4a;
+  --color-tone-program: #5fa88a;
+  --color-tone-community: #c97b94;
+  --color-tone-hackathon: #8c7bd6;
+
+  /* Radii */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
+
+  /* Shadows — soft, low-contrast */
+  --shadow-soft: 0 1px 2px rgba(15, 15, 12, 0.05);
+  --shadow-lifted: 0 20px 45px -22px rgba(15, 15, 12, 0.35);
+  --shadow-sheet: 0 -24px 70px -12px rgba(15, 15, 12, 0.25);
+
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ---- Arabic typography -------------------------------------------------
+   Thmanyah Sans has taller ascenders and a deeper descender than the Latin
+   stack, so spacing is tuned to the actual face rather than inherited. */
+
+html[lang="ar"] body {
+  font-family: "Thmanyah Sans", var(--font-sans);
+}
+
+/* Arabic is a connected script — tracking visually breaks the letter joins,
+   so every Latin `tracking-*` utility has to be neutralised. */
+html[lang="ar"] * {
+  letter-spacing: normal !important;
+}
+
+/* Arabic words are longer than their English counterparts, so the display size
+   is set for this script rather than inherited from the Latin scale — otherwise
+   the role headline breaks mid-word and orphans a single letter. */
+html[lang="ar"] h1 {
+  font-size: clamp(28px, 5.6vw, 46px);
+  line-height: 1.34;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+html[lang="ar"] h2 {
+  line-height: 1.36;
+}
+
+html[lang="ar"] p,
+html[lang="ar"] li {
+  line-height: 1.85;
+}
+
+/* Controls: the deeper descender needs a little more room to stay optically
+   centred inside chips, buttons and the composer. */
+html[lang="ar"] button,
+html[lang="ar"] input,
+html[lang="ar"] a {
+  line-height: 1.75;
+}
+
+html[lang="ar"] input::placeholder {
+  line-height: 1.6;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+:where(button, a, input, [tabindex]):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-ink) 55%, transparent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Slow ambient drift behind the cover page. Two layers on different periods so
+   the light never settles into an obvious loop. Transform-only, so it stays on
+   the compositor; the reduced-motion rule below stops it while leaving the
+   light itself in place. */
+@keyframes intro-drift-a {
+  0% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+}
+
+@keyframes intro-drift-b {
+  0% {
+    transform: translate3d(4%, 3%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-4%, -3%, 0) scale(0.96);
+  }
+  100% {
+    transform: translate3d(4%, 3%, 0) scale(1.05);
+  }
+}
+
+.intro-drift-a {
+  animation: intro-drift-a 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+.intro-drift-b {
+  animation: intro-drift-b 31s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Fine film grain — gives the dark project cards material, so they read as
+   surfaces rather than flat fills. Purely decorative. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
