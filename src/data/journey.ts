@@ -26,117 +26,128 @@ export const experienceCategoryMeta: Record<ExperienceCategory, ExperienceCatego
  * the reverse is derived in lib/relationships.ts, never stored here.
  *
  * EN and AR are authored separately, not translated from one another.
+ *
+ * Ordered most recent first. Deliberately selective: this is not a CV dump.
+ * One-off attendance, ordinary workshops, online certificates and short courses
+ * with no output stay out. Where one experience produced several contributions,
+ * they live inside it as highlights rather than becoming timeline entries.
+ *
+ * `professional` stays supported in the model even though nothing uses it yet.
  */
 export const experiencesById: Record<string, ExperienceEntry> = {
-  "edu-university": {
-    id: "edu-university",
-    category: "education",
-    organization: L("Placeholder University", "جامعة تجريبية"),
-    role: L("B.Sc. in Computer Science", "بكالوريوس علوم الحاسب"),
-    startDate: L("2021", "٢٠٢١"),
-    endDate: L("2025", "٢٠٢٥"),
-    location: L("Remote", "عن بُعد"),
-    description: L(
-      "Coursework spanning systems, algorithms and applied machine learning, with a thesis project exploring interface design for AI-heavy tools.",
-      "مقررات تشمل الأنظمة والخوارزميات وتعلم الآلة التطبيقي، مع مشروع تخرج يستكشف تصميم الواجهات للأدوات المعتمدة على الذكاء الاصطناعي.",
-    ),
-    highlights: {
-      en: [
-        "Thesis on conversational interface patterns for technical tools",
-        "Teaching assistant for an intro programming course",
-      ],
-      ar: [
-        "أطروحة عن أنماط الواجهات الحوارية للأدوات التقنية",
-        "مساعدة تدريس لمقرر البرمجة التمهيدي",
-      ],
-    },
-    skills: ["Algorithms", "Systems Design", "Applied ML"],
-  },
-
-  "prof-internship": {
-    id: "prof-internship",
-    category: "professional",
-    organization: L("Placeholder Tech Co.", "شركة تقنية تجريبية"),
-    role: L("Software Engineer Intern", "متدربة هندسة برمجيات"),
-    startDate: L("Summer 2025", "صيف ٢٠٢٥"),
-    location: L("Remote", "عن بُعد"),
-    description: L(
-      "Joined the applied AI team to help ship a research-facing product surface — most of the interaction design work that became Aurora started here.",
-      "انضممت لفريق الذكاء الاصطناعي التطبيقي للمساعدة في إطلاق واجهة منتج بحثية — معظم عمل تصميم التفاعل الذي أصبح أورورا بدأ هنا.",
-    ),
-    highlights: {
-      en: [
-        "Shipped the first working version of Aurora's citation-linking engine",
-        "Paired closely with design on the conversational interaction model",
-      ],
-      ar: [
-        "أطلقت أول نسخة عاملة من محرك ربط المراجع في أورورا",
-        "عملت عن قرب مع فريق التصميم على نموذج التفاعل الحواري",
-      ],
-    },
-    skills: ["TypeScript", "React", "LLM Orchestration"],
-    relatedProjectIds: ["aurora"],
-  },
-
-  "program-fellowship": {
-    id: "program-fellowship",
-    category: "program",
-    organization: L("Placeholder Academy", "أكاديمية تجريبية"),
-    role: L("AI Builder Fellowship", "زمالة بناء الذكاء الاصطناعي"),
-    startDate: L("2024", "٢٠٢٤"),
-    endDate: L("2024", "٢٠٢٤"),
-    description: L(
-      "A selective, project-based technical program focused on shipping applied AI products end to end rather than studying them in the abstract.",
-      "برنامج تقني انتقائي قائم على المشاريع، يركز على إطلاق منتجات ذكاء اصطناعي تطبيقية من البداية للنهاية بدل دراستها نظرياً.",
-    ),
-    highlights: {
-      en: [
-        "Built Relay as the capstone project, from architecture through deployment",
-        "One of a small cohort selected from an applicant pool of several hundred",
-      ],
-      ar: [
-        "بنيت ريلاي كمشروع تخرج، من التصميم المعماري حتى النشر",
-        "ضمن دفعة صغيرة اختيرت من بين عدة مئات من المتقدمين",
-      ],
-    },
-    skills: ["Python", "FastAPI", "Product Thinking"],
-    relatedProjectIds: ["relay"],
-  },
-
-  "community-organizer": {
-    id: "community-organizer",
+  "exir-hub": {
+    id: "exir-hub",
     category: "community",
-    organization: L("Placeholder Dev Community", "مجتمع مطورين تجريبي"),
-    role: L("Core Organizer", "منظِّمة أساسية"),
-    startDate: L("2023", "٢٠٢٣"),
-    description: L(
-      "Helped run a student developer community — workshops, project nights, and a lot of quiet infrastructure work to keep things running.",
-      "ساعدت في إدارة مجتمع مطورين طلابي — ورش عمل وأمسيات مشاريع، والكثير من العمل التنظيمي الهادئ لإبقاء الأمور تسير.",
-    ),
-    highlights: {
-      en: ["Organized a recurring build-night series", "Mentored newer members on their first projects"],
-      ar: ["نظمت سلسلة أمسيات بناء دورية", "أرشدت الأعضاء الجدد في مشاريعهم الأولى"],
-    },
-    skills: ["Community Building", "Mentorship"],
+    organization: L("Exir Hub", "نادي إكسير هب"),
+    role: L("Project Management Committee Member", "عضوة لجنة إدارة المشاريع"),
+    startDate: L("August 2026", "أغسطس ٢٠٢٦"),
+    endDate: L("Present", "الآن"),
+    // New enough that there is nothing to list yet, and that is fine. No
+    // filler stands in for contributions that haven't happened.
   },
 
-  "hackathon-2024": {
-    id: "hackathon-2024",
+  "ai-champions": {
+    id: "ai-champions",
     category: "hackathon",
-    organization: L("Placeholder Hackathon 2024", "هاكاثون تجريبي ٢٠٢٤"),
-    role: L("Winner — Best Creative Use of Tech", "الفائزة — أفضل استخدام إبداعي للتقنية"),
-    startDate: L("2024", "٢٠٢٤"),
-    location: L("On-site", "حضورياً"),
-    description: L(
-      "A 36-hour build sprint. Lumen started here as a rough shader experiment and became the most-referenced project on my portfolio since.",
-      "سباق بناء لمدة ٣٦ ساعة. بدأ لومن هنا كتجربة شيدر أولية وأصبح أكثر مشاريعي إشارةً منذ ذلك الحين.",
+    organization: L(
+      "AI Champions · Tuwaiq Academy + Google for Developers",
+      "AI Champions · أكاديمية طويق وGoogle for Developers",
     ),
-    highlights: {
-      en: ["Built and shipped Lumen in 36 hours", "Presented to a panel of industry judges"],
-      ar: ["بنيت وأطلقت لومن خلال ٣٦ ساعة", "قدمت العرض أمام لجنة تحكيم من الصناعة"],
+    role: L("Tourism AI Track", "مسار السياحة"),
+    outcome: L("2nd Place", "المركز الثاني"),
+    startDate: L("August 2026", "أغسطس ٢٠٢٦"),
+    description: L(
+      "An intensive challenge where we built UMBRA as a prototype in two to three days, and the project placed 2nd in the Tourism track.",
+      "تحدي مكثف بنينا خلاله UMBRA كنموذج أولي خلال يومين إلى ثلاثة، وحصل المشروع على المركز الثاني في مسار السياحة.",
+    ),
+    body: {
+      en: [
+        "We took part in the Tourism track at AI Champions, run by Tuwaiq Academy and Google for Developers. In two to three days we built UMBRA from an idea into a demo-ready MVP, and placed 2nd in the track.",
+      ],
+      ar: [
+        "شاركنا في مسار السياحة ضمن AI Champions من أكاديمية طويق وGoogle for Developers. خلال يومين إلى ثلاثة بنينا UMBRA من الفكرة إلى MVP قابل للعرض، وحصلنا على المركز الثاني في المسار.",
+      ],
     },
-    skills: ["WebGL", "Rapid Prototyping"],
-    relatedProjectIds: ["lumen"],
+  },
+
+  /**
+   * A student club at PNU. Unrelated to the Tuwaiq Academy bootcamp below,
+   * despite the shared name — different organisation, different category.
+   */
+  "tuwaiq-club": {
+    id: "tuwaiq-club",
+    category: "community",
+    organization: L(
+      "Tuwaiq Student Club · Princess Nourah University",
+      "نادي طويق الطلابي · جامعة الأميرة نورة",
+    ),
+    role: L("AI Committee Member", "عضوة لجنة الذكاء الاصطناعي"),
+    startDate: L("May 2026", "مايو ٢٠٢٦"),
+    endDate: L("Present", "الآن"),
+    description: L(
+      "Contributing to the committee's technical programmes and bootcamp activities.",
+      "المشاركة في برامج اللجنة التقنية وأنشطة المعسكرات.",
+    ),
+    highlights: [
+      {
+        id: "intro-to-ai",
+        title: L("Introduction to Artificial Intelligence", "برنامج مدخل إلى الذكاء الاصطناعي"),
+        description: L(
+          "Took part in delivering the programme.",
+          "شاركت في تقديم البرنامج.",
+        ),
+        link: {
+          label: L("View post", "عرض المنشور"),
+          url: "https://www.linkedin.com/posts/jawharaal_%D8%B3%D8%B9%D8%AF%D8%AA-%D8%AC%D8%AF%D8%A7-%D8%A8%D8%AA%D9%82%D8%AF%D9%8A%D9%85-%D9%88%D8%B1%D8%B4%D8%AA%D9%8A%D9%86-%D8%B6%D9%85%D9%86-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D9%85%D8%AF%D8%AE%D9%84-%D8%A5%D9%84%D9%89-activity-7483100510212964353-GYv9",
+          icon: "linkedin",
+        },
+      },
+      {
+        id: "ai-models-bootcamp",
+        title: L("AI Model Building Bootcamp", "معسكر بناء نماذج الذكاء الاصطناعي"),
+        description: L(
+          "Part of the organising and activities side of the bootcamp. As one of its activities I built an interactive educational game for the students taking part.",
+          "كنت ضمن الجانب التنظيمي وأنشطة المعسكر، ومن ضمن الأنشطة بنيت لعبة تعليمية تفاعلية للطالبات المشاركات.",
+        ),
+      },
+    ],
+  },
+
+  "xr-bootcamp": {
+    id: "xr-bootcamp",
+    category: "program",
+    organization: L("Tuwaiq Academy", "أكاديمية طويق"),
+    role: L("XR Development Bootcamp", "معسكر تطوير XR"),
+    startDate: L("July – August 2025", "يوليو – أغسطس ٢٠٢٥"),
+    location: L("Riyadh, Saudi Arabia", "الرياض، السعودية"),
+    description: L(
+      "A hands-on bootcamp in building AR, VR and MR experiences with Unity and XR tooling.",
+      "معسكر عملي في تطوير تجارب AR وVR وMR باستخدام Unity وأدوات XR.",
+    ),
+    body: {
+      en: [
+        "A hands-on bootcamp focused on building AR, VR and MR experiences with Unity and XR tooling, and my first real step into immersive development.",
+        "During the bootcamp I tried out ideas and built a lot of prototypes, some of them never meant as more than an experiment. The two we took furthest were VRLingo and AR Recipe.",
+      ],
+      ar: [
+        "معسكر عملي ركز على تطوير تجارب AR وVR وMR باستخدام Unity وأدوات XR، وكان أول دخول فعلي لي لعالم تطوير التجارب الغامرة.",
+        "خلال المعسكر جرّبت أفكارًا وبنيت نماذج كثيرة، وبعضها ما كان الهدف منه أكثر من التجربة والتعلّم. المشروعان اللي كملناهما بشكل أوضح كانا VRLingo وAR Recipe.",
+      ],
+    },
+  },
+
+  pnu: {
+    id: "pnu",
+    category: "education",
+    organization: L(
+      "Princess Nourah Bint Abdulrahman University",
+      "جامعة الأميرة نورة بنت عبدالرحمن",
+    ),
+    role: L("BSc in Artificial Intelligence", "بكالوريوس الذكاء الاصطناعي"),
+    startDate: L("2023", "٢٠٢٣"),
+    endDate: L("2027 (expected)", "٢٠٢٧ (متوقع)"),
+    location: L("Riyadh, Saudi Arabia", "الرياض، السعودية"),
+    // No description: the degree, the dates and the university say all of it.
   },
 };
 

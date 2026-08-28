@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Character } from "@/components/Character";
 import { identity } from "@/data/identity";
 import { useLocale } from "@/lib/i18n";
@@ -13,6 +13,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export function Hero() {
   const { t } = useLocale();
   const name = t(identity.name);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="flex flex-col items-center text-center">
@@ -34,10 +35,21 @@ export function Hero() {
         {t(identity.role)}
       </motion.h1>
 
+      {/* Enters last, then breathes: 6px over seven seconds, which reads as
+          presence rather than animation. The drift starts only once the
+          entrance has settled, and is dropped entirely for reduced motion. */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.75, ease: EASE, delay: 0.16 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: shouldReduceMotion ? 0 : [0, -6, 0],
+        }}
+        transition={{
+          opacity: { duration: 0.75, ease: EASE, delay: 0.16 },
+          scale: { duration: 0.75, ease: EASE, delay: 0.16 },
+          y: { duration: 7, ease: "easeInOut", repeat: Infinity, delay: 0.95 },
+        }}
         className="mt-7 lg:mt-9"
       >
         <Character layoutId="character" size={168} pose="greeting" name={name} />

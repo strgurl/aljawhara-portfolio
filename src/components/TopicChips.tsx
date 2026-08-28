@@ -15,10 +15,10 @@ interface TopicChipsProps {
 /** Per-topic icon tint — a small, restrained note of colour, as in the reference. */
 const iconTone: Record<string, string> = {
   me: "--color-tone-education",
-  projects: "--color-tone-program",
-  skills: "--color-tone-hackathon",
+  work: "--color-tone-program",
   journey: "--color-tone-professional",
-  fun: "--color-tone-community",
+  skills: "--color-tone-hackathon",
+  now: "--color-tone-community",
   contact: "--color-glow",
 };
 

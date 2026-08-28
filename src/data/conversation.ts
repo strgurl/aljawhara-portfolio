@@ -1,232 +1,523 @@
 import { L } from "@/lib/i18n";
-import type { ConversationNode } from "@/types/conversation";
-import { allProjects } from "@/data/projects";
+import type { ConversationNode, ContactAction, FollowUp } from "@/types/conversation";
+import { projectsById, workProjects } from "@/data/projects";
 import { allExperiences } from "@/data/journey";
-
-const EMAIL = "mailto:hello@jawhara.dev";
+import { CONTACT, mailtoHref } from "@/data/contact";
 
 /**
  * The conversation graph. Every answer here is authored — nothing is generated,
  * so browsing costs nothing and can never be rate limited.
  *
- * EN and AR are authored separately — same information and personality, each
- * written naturally in its own language rather than translated from the other.
- * Both remain placeholder copy until the real content pass.
+ * Arabic is the source of truth for intent and tone; English is written to
+ * carry the same meaning naturally rather than translated from it.
+ *
+ * Follow-up questions are kept deliberately few. The cards and detail sheets
+ * carry the detail, and a question only survives where it adds something the
+ * sheet does not already say. Journey is a timeline, Skills shows the clusters,
+ * and Contact surfaces its actions directly rather than behind questions.
  */
-export const conversationNodes: Record<string, ConversationNode> = {
-  intro: {
-    id: "intro",
-    paragraphs: {
-      en: ["Hey — I'm Jawhara. Ask me anything, or pick a place to start."],
-      ar: ["هلا، أنا جوهرة. اسألني عن أي شي، أو ابدأ من وحدة من هذي."],
-    },
-  },
 
+/**
+ * The three ways to reach her, always in this order. A value that isn't set
+ * yet renders as an inert row rather than disappearing, so the shape of the
+ * section is stable and filling in a value is the only change needed.
+ */
+const contactActions: ContactAction[] = [
+  { channel: "email", label: L("Email", "الإيميل"), value: mailtoHref },
+  { channel: "linkedin", label: L("LinkedIn", "LinkedIn"), value: CONTACT.linkedin },
+  { channel: "cv", label: L("CV", "السيرة الذاتية"), value: CONTACT.cv },
+];
+
+const to = (label: FollowUp["label"], targetId: string): FollowUp => ({ label, targetId });
+
+/** The one shared bridge left in the graph. */
+const askWork = L("What have you worked on?", "وش مشاريعك؟");
+
+/** Navigation labels for the four Work cards. */
+const projectChip = {
+  umbra: L("Tell me about UMBRA", "كلميني عن UMBRA"),
+  vrlingo: L("Tell me about VRLingo", "كلميني عن VRLingo"),
+  taazur: L("Tell me about Taazur", "كلميني عن تآزر"),
+  portfolio: L("Tell me about this portfolio", "كلميني عن هذا الموقع"),
+  fanAlKabsa: L("Tell me about Fan Al Kabsa", "كلميني عن فن الكبسة"),
+};
+
+const umbraQuestions = {
+  gemini: L("How did you use Gemini?", "كيف استخدمتوا Gemini؟"),
+  shade: L("How did you calculate the shade?", "كيف حسبتوا الظل؟"),
+};
+
+const vrlingoQuestions = {
+  whyVr: L("Why VR for learning a language?", "ليش اخترتوا VR لتعلّم اللغة؟"),
+  characters: L("How do the conversational characters work?", "كيف تشتغل الشخصيات الحوارية؟"),
+};
+
+const portfolioQuestions = {
+  authored: L("Why write every answer in advance?", "طيب ليش الإجابات مو مولّدة؟"),
+  matching: L("How does the matching work?", "كيف تتم المطابقة؟"),
+};
+
+export const conversationNodes: Record<string, ConversationNode> = {
+  // ---------------------------------------------------------------- Me
   me: {
     id: "me",
     triggers: {
-      en: ["who are you", "about you", "tell me about yourself", "about jawhara", "who is jawhara"],
-      ar: ["من أنت", "عنك", "عرفيني بنفسك", "من هي جوهرة"],
+      en: [
+        "who are you",
+        "about you",
+        "tell me about yourself",
+        "introduce yourself",
+        "who is aljawhara",
+        "about aljawhara",
+      ],
+      ar: ["من انت", "مين انتي", "عنك", "عرفيني بنفسك", "من هي الجوهرة", "عن الجوهرة"],
     },
     paragraphs: {
       en: [
-        "I'm Jawhara — I design and build software where the interaction is the product, not a wrapper around it. Most of my work sits at the intersection of AI systems and interface craft.",
-        "Before this, I spent a few years shipping full-stack product work, which is where the instinct for detail and finish comes from.",
+        "Hi, I'm Aljawhara. Glad you're here 👋",
+        "I study AI, and I'd rather build and try things than stop at the theory side of it.",
+        "AI is the field I love and keep coming back to, but my curiosity doesn't stop at one field. When an idea catches me, I like to follow it and learn whatever it needs until it turns from an idea into something I can build and try.",
+        "It's easier for me to widen what I know than to shrink an idea so it fits.",
       ],
       ar: [
-        "أنا جوهرة. أصمم وأبني برامج يكون التفاعل فيها هو المنتج نفسه، مو مجرد غلاف حوله. أغلب شغلي بين أنظمة الذكاء الاصطناعي وحرفية الواجهات.",
-        "قبلها اشتغلت سنوات على منتجات متكاملة، ومن هناك جاني الهوس بالتفاصيل والإتقان.",
+        "السلام عليكم، أنا الجوهرة 👋 سعيدة إنك هنا.",
+        "طالبة ذكاء اصطناعي، وأحب أبني وأجرب أكثر من إني أوقف عند الجانب النظري.",
+        "الذكاء الاصطناعي هو المجال اللي أحبّه وأرجع له دائمًا، لكن فضولي ما يوقف عند مجال واحد. إذا شدتني فكرة، أحب أتبعها وأتعلم اللي تحتاجه لين تتحول من مجرد فكرة لشيء أقدر أبنيه وأجربه.",
+        "بالنسبة لي، أسهل إني أوسّع اللي أعرفه من إني أصغّر الفكرة عشان تناسبه.",
       ],
     },
-    techTags: ["AI Engineer", "Creative Developer", "Based remotely"],
-    followUps: [
-      { label: L("Where have you worked and learned?", "وين اشتغلتي وتعلمتي؟"), targetId: "journey" },
-      { label: L("Show me your work", "ورّيني شغلك"), targetId: "projects" },
-      { label: L("What tools do you use?", "وش الأدوات اللي تستخدمينها؟"), targetId: "skills" },
-    ],
+    followUps: [to(askWork, "work")],
   },
 
-  now: {
-    id: "now",
+  // -------------------------------------------------------------- Work
+  work: {
+    id: "work",
     triggers: {
-      en: ["now", "currently", "what are you working on", "these days", "fun", "hobbies", "free time"],
-      ar: ["الآن", "حالياً", "على ماذا تعملين", "هذه الأيام", "ممتع", "هوايات", "وقت الفراغ"],
+      en: [
+        "work",
+        "projects",
+        "portfolio",
+        "what have you built",
+        "show me your work",
+        "what have you worked on",
+      ],
+      ar: ["اعمالك", "مشاريع", "مشاريعك", "وش بنيتي", "وريني شغلك"],
     },
     paragraphs: {
       en: [
-        "Right now I'm deep in a run of interactive, narrative-driven interfaces — places where motion and structure carry as much meaning as the copy does.",
-        "Outside of that: reading on interface theory, and slowly getting better at generative design tooling.",
+        "A few of the projects I've built. Open any card for the idea behind it, how it works, and what it was built with.",
       ],
       ar: [
-        "هالفترة مركّزة على واجهات تفاعلية فيها حكاية — الحركة والترتيب يوصلون المعنى مثل النص بالضبط.",
-        "وبعيداً عن الشغل: أقرأ عن تصميم الواجهات، وأطوّر نفسي شوي بشوي في أدوات التصميم التوليدي.",
+        "هذي مجموعة من مشاريعي. اضغط على أي مشروع وبتلقى فكرته، تفاصيله، والتقنيات اللي استخدمناها.",
       ],
     },
+    projects: workProjects,
     followUps: [
-      { label: L("Show me your work", "ورّيني شغلك"), targetId: "projects" },
-      { label: L("How do I reach you?", "كيف أوصل لك؟"), targetId: "contact" },
+      to(projectChip.umbra, "project-umbra"),
+      to(projectChip.vrlingo, "project-vrlingo"),
+      to(projectChip.taazur, "project-taazur"),
+      to(projectChip.portfolio, "project-portfolio"),
+      to(projectChip.fanAlKabsa, "project-fan-al-kabsa"),
     ],
   },
 
-  projects: {
-    id: "projects",
+  // --------------------------------------------------------------- UMBRA
+  "project-umbra": {
+    id: "project-umbra",
     triggers: {
-      en: ["project", "projects", "work", "portfolio", "show me your work", "what have you built"],
-      ar: ["مشروع", "مشاريع", "أعمال", "أعمالك", "ماذا بنيت"],
+      en: ["umbra", "shade route", "shade routing", "riyadh walking"],
+      ar: ["امبرا", "المشي في الرياض", "طريق الظل"],
     },
-    paragraphs: {
-      en: [
-        "A few things I've shipped recently — spanning applied AI products and fully custom interactive builds. Tap a card for the full story.",
-      ],
-      ar: [
-        "هذي بعض الأشياء اللي طلعتها مؤخراً، بين منتجات ذكاء اصطناعي وأعمال تفاعلية مبنية من الصفر. اضغط أي بطاقة وأحكي لك القصة كاملة.",
-      ],
-    },
-    projects: allProjects,
+    paragraphs: projectsById.umbra.body,
+    projects: [projectsById.umbra],
     followUps: [
-      { label: L("Which project are you most proud of?", "أي مشروع تفتخرين فيه أكثر؟"), targetId: "proud" },
-      { label: L("How do these connect to your journey?", "وش علاقتها بمسيرتك؟"), targetId: "journey" },
+      to(umbraQuestions.gemini, "umbra-gemini"),
+      to(umbraQuestions.shade, "umbra-shade"),
     ],
   },
 
-  proud: {
-    id: "proud",
+  "umbra-gemini": {
+    id: "umbra-gemini",
     triggers: {
-      en: ["proud", "favorite project", "best project"],
-      ar: ["تفتخرين", "المشروع المفضل", "أفضل مشروع"],
+      en: ["how did you use gemini", "gemini", "does the ai pick the route"],
+      ar: ["كيف استخدمتوا جيميني", "دور جيميني", "الذكاء الاصطناعي يختار الطريق"],
     },
     paragraphs: {
       en: [
-        "Probably Relay. It's the least flashy of the three, but it's the one built on a real constraint — no model call on the happy path — and getting that to feel just as fluid as an AI-backed flow took the most craft.",
-        "It's also the direct ancestor of how this portfolio works: everything you're clicking through right now is the same deterministic-graph idea, just pointed at a different problem.",
+        "After the route data has been calculated. It takes the finished numbers and explains the difference between the options in plain language, with explicit instructions not to change any value or choose the route itself.",
       ],
       ar: [
-        "غالباً ريلاي. هو أقلهم بريقاً، بس هو الوحيد المبني على قيد حقيقي: ولا استدعاء لأي نموذج في المسار الطبيعي. وخلّيه يحس سلس مثل أي تجربة مدعومة بالذكاء الاصطناعي كان أصعب جزء.",
-        "وهو نفسه أصل الفكرة اللي يشتغل فيها هالموقع: كل اللي تتصفحه الحين نفس المبدأ، بس على مسألة ثانية.",
+        "استخدمناه بعد ما تنحسب بيانات المسار. يأخذ الأرقام الجاهزة ويشرح الفرق بين الخيارات بلغة بسيطة، مع تعليمات واضحة إنه ما يغير أي قيمة ولا يختار المسار بنفسه.",
       ],
     },
+    followUps: [to(umbraQuestions.shade, "umbra-shade")],
+  },
+
+  "umbra-shade": {
+    id: "umbra-shade",
+    triggers: {
+      en: ["how did you calculate the shade", "shade data", "where does shade come from"],
+      ar: ["كيف حسبتوا الظل", "بيانات الظل", "وين الظل"],
+    },
+    paragraphs: {
+      en: [
+        "The sun's position itself is calculated from the date and time, but the shade percentage in the MVP is based on prototype data. The next step for the project is connecting those calculations to real data on buildings, tree cover and street orientation.",
+      ],
+      ar: [
+        "موقع الشمس نفسه محسوب من التاريخ والوقت، لكن نسبة الظل في الـMVP مبنية على بيانات تجريبية. الخطوة التالية للمشروع هي ربط الحسابات ببيانات حقيقية للمباني والأشجار واتجاهات الشوارع.",
+      ],
+    },
+    followUps: [to(umbraQuestions.gemini, "umbra-gemini")],
+  },
+
+  // ------------------------------------------------------------- VRLingo
+  "project-vrlingo": {
+    id: "project-vrlingo",
+    triggers: {
+      en: ["vrlingo", "vr language", "language game", "sidequest"],
+      ar: ["في ار لينقو", "لعبة تعلم اللغة", "الواقع الافتراضي"],
+    },
+    paragraphs: projectsById.vrlingo.body,
+    projects: [projectsById.vrlingo],
     followUps: [
-      { label: L("Back to projects", "رجعني للمشاريع"), targetId: "projects" },
-      { label: L("How do I reach you?", "كيف أوصل لك؟"), targetId: "contact" },
+      to(vrlingoQuestions.whyVr, "vrlingo-why-vr"),
+      to(vrlingoQuestions.characters, "vrlingo-characters"),
     ],
   },
 
+  "vrlingo-characters": {
+    id: "vrlingo-characters",
+    triggers: {
+      en: ["how do the characters work", "convai", "npc", "how do they respond"],
+      ar: ["كيف تشتغل الشخصيات", "الشخصيات الحوارية", "كونفاي"],
+    },
+    paragraphs: {
+      en: [
+        "The characters run on Convai, a ready-made conversational platform for game characters, so we weren't building a dialogue model ourselves. What we did was give each character a role and a context that fits the place, and set them up to help and correct you when you get something wrong rather than letting the conversation stall.",
+      ],
+      ar: [
+        "الشخصيات تشتغل على Convai، وهي منصة حوارية جاهزة لشخصيات الألعاب، فما بنينا نموذج حوار من الصفر. اللي سويناه إننا نعطي كل شخصية دور وسياق يناسب المكان، ونجهزها إنها تساعدك وتصحح لك إذا أخطأت في الكلام بدل ما يتوقف الحوار.",
+      ],
+    },
+    followUps: [to(askWork, "work")],
+  },
+
+  "vrlingo-why-vr": {
+    id: "vrlingo-why-vr",
+    triggers: {
+      en: ["why vr for learning a language", "why vr", "why not an app"],
+      ar: ["ليش الواقع الافتراضي", "ليش vr", "ليش مو تطبيق عادي"],
+    },
+    // cross-linked to the sibling question below
+    paragraphs: {
+      en: [
+        "Because the goal was to tie the language to a situation, not just a word on a screen. In VR you can hear, speak, pick things up and interact with the place, so a word ends up attached to something you saw or did inside the experience.",
+      ],
+      ar: [
+        "لأن الهدف كان نخلي اللغة مرتبطة بموقف، مو بس كلمة على شاشة. في VR تقدر تسمع، تتكلم، تمسك الأشياء وتتفاعل مع المكان، فالمفردة تصير مرتبطة بشي شفته أو سويته داخل التجربة.",
+      ],
+    },
+    followUps: [to(vrlingoQuestions.characters, "vrlingo-characters")],
+  },
+
+  // -------------------------------------------------------------- Taazur
+  "project-taazur": {
+    id: "project-taazur",
+    triggers: {
+      en: ["taazur", "teammate matching", "team formation"],
+      ar: ["تازر", "تكوين الفرق", "مطابقة الفرق"],
+    },
+    paragraphs: projectsById.taazur.body,
+    projects: [projectsById.taazur],
+    followUps: [
+      to(L("How does it decide who to suggest?", "كيف يقرر مين يقترح؟"), "taazur-matching"),
+    ],
+  },
+
+  "taazur-matching": {
+    id: "taazur-matching",
+    triggers: {
+      en: ["how does it decide who to suggest", "how does it suggest teammates"],
+      ar: ["كيف يقرر مين يقترح", "كيف يقترح الاعضاء"],
+    },
+    paragraphs: {
+      en: [
+        "It looks at coverage in both directions: not only whether you have what I need, but whether I have what you need too. A suggestion that only works one way tends not to hold, so the ranking favours pairs who complete each other both ways.",
+      ],
+      ar: [
+        "يشوف التغطية من الجهتين: مو بس هل عندك اللي أحتاجه، لكن هل عندي اللي تحتاجه بعد. الاقتراح اللي يمشي من جهة وحدة غالبًا ما يستمر، فالترتيب يعطي أولوية للأزواج اللي يكملون بعض في الاتجاهين.",
+      ],
+    },
+    followUps: [to(askWork, "work")],
+  },
+
+  // ------------------------------------------------------------ Portfolio
+  "project-portfolio": {
+    id: "project-portfolio",
+    triggers: {
+      en: [
+        "this portfolio",
+        "this website",
+        "this site",
+        "how was this built",
+        "how does this work",
+        "why no chatbot",
+        "is this a chatbot",
+        "is this an llm",
+      ],
+      ar: [
+        "هذا الموقع",
+        "الموقع نفسه",
+        "كيف بنيتي الموقع",
+        "كيف يشتغل الموقع",
+        "ليش ما فيه شات بوت",
+        "هل هذا شات بوت",
+      ],
+    },
+    paragraphs: projectsById.portfolio.body,
+    projects: [projectsById.portfolio],
+    followUps: [
+      to(portfolioQuestions.authored, "portfolio-authored"),
+      to(portfolioQuestions.matching, "portfolio-matching"),
+    ],
+  },
+
+  "portfolio-authored": {
+    id: "portfolio-authored",
+    triggers: {
+      en: ["why write every answer in advance", "why not generated", "why no llm", "authored"],
+      ar: ["ليش الاجابات مو مولدة", "ليش مكتوبة مسبقا", "ليش ما تستخدمين نموذج"],
+    },
+    paragraphs: {
+      en: [
+        "Because the portfolio speaks for me, and I don't want any chance of the system adding something that isn't true. Everything you read is written and reviewed in advance, and the reply reaches you instantly with no cost and no usage limits. Free typing still stays; your question is routed to content that already exists rather than generated on the spot.",
+      ],
+      ar: [
+        "لأن البورتفوليو يتكلم عني، وما أبي احتمال إن النظام يضيف معلومة مو صحيحة. كل شيء تقراه مكتوب ومراجع مسبقًا، وبنفس الوقت الرد يوصلك على طول بدون تكلفة ولا حدود استخدام. والكتابة الحرة باقية، بس السؤال يتوجه لمحتوى موجود بدل ما يتولد في اللحظة.",
+      ],
+    },
+    followUps: [to(portfolioQuestions.matching, "portfolio-matching")],
+  },
+
+  "portfolio-matching": {
+    id: "portfolio-matching",
+    triggers: {
+      en: ["how does the matching work", "intent matching", "how does it understand what i type"],
+      ar: ["كيف تتم المطابقة", "كيف يفهم اللي اكتبه"],
+    },
+    paragraphs: {
+      en: [
+        "The matching is local, and works on phrases, keywords and how much of your question is accounted for. Arabic gets its own handling to unify some spelling variations and strip diacritics, so different phrasings of the same question land in the same place as far as possible.",
+      ],
+      ar: [
+        "المطابقة محلية وتعتمد على عبارات وكلمات مفتاحية وتغطية السؤال. العربي له معالجة خاصة لتوحيد بعض اختلافات الكتابة وإزالة التشكيل، عشان الصيغ المختلفة للسؤال توصل لنفس المعنى قدر الإمكان.",
+      ],
+    },
+    followUps: [to(askWork, "work")],
+  },
+
+  // --------------------------------------------------------- Fan Al Kabsa
+  "project-fan-al-kabsa": {
+    id: "project-fan-al-kabsa",
+    triggers: {
+      en: ["fan al kabsa", "roblox", "restaurant game", "roblox game"],
+      ar: ["فن الكبسة", "فن الكبسه", "روبلوكس", "لعبة المطعم"],
+    },
+    paragraphs: projectsById["fan-al-kabsa"].body,
+    projects: [projectsById["fan-al-kabsa"]],
+    followUps: [to(askWork, "work")],
+  },
+
+  // ------------------------------------------------------------- Journey
   journey: {
     id: "journey",
     triggers: {
-      en: ["journey", "experience", "what have you been up to", "where have you worked", "resume", "cv", "programs", "training", "hackathons", "community"],
-      ar: ["مسيرة", "خبرة", "ماذا فعلتِ", "أين عملتِ", "السيرة الذاتية", "برامج", "تدريب", "هاكاثون", "مجتمع"],
+      en: [
+        "journey",
+        "experience",
+        "background",
+        "how did you get here",
+        "education",
+        "university",
+        "milestones",
+        // Recruiters ask about the degree in these words. The answer — still
+        // studying, 2027 expected — is on this node, so route it here rather
+        // than letting "project" pull it toward current work.
+        "graduation",
+        "graduation year",
+        "when do you graduate",
+        "graduation project",
+        "degree",
+        "major",
+      ],
+      ar: [
+        "مسيرتك",
+        "خبرتك",
+        "كيف وصلتي",
+        "دراستك",
+        "الجامعة",
+        "محطاتك",
+        "سنة التخرج",
+        "متى تتخرجين",
+        "تخرجك",
+        "مشروع التخرج",
+        "تخصصك",
+      ],
     },
     paragraphs: {
       en: [
-        "My work comes out of a few different places — school, a couple of programs, a hackathon, and a community I help run. Here's the shape of it.",
+        "The milestones that have shaped what I do so far, from university through bootcamps and hackathons.",
       ],
       ar: [
-        "شغلي طلع من أماكن متفرقة: الجامعة، برنامجين، هاكاثون، ومجتمع أساعد في إدارته. هذي الصورة العامة.",
+        "هذي أبرز المحطات اللي كان لها أثر في تجربتي إلى الآن، من الجامعة إلى المعسكرات والهاكاثونات.",
       ],
     },
     experiences: allExperiences,
-    followUps: [
-      { label: L("What have you done outside university?", "وش سويتي خارج الجامعة؟"), targetId: "journey-outside" },
-      { label: L("Show me the related projects", "ورّيني المشاريع المرتبطة"), targetId: "projects" },
-    ],
+    followUps: [to(askWork, "work")],
   },
 
-  "journey-outside": {
-    id: "journey-outside",
-    triggers: {
-      en: ["outside university", "extracurricular", "clubs and hackathons"],
-      ar: ["خارج الجامعة", "أنشطة إضافية", "الأندية والهاكاثونات"],
-    },
-    paragraphs: {
-      en: [
-        "Outside of coursework, most of it comes down to a community I help organize and one hackathon that turned into a real project.",
-      ],
-      ar: [
-        "بعيداً عن المواد الدراسية، أغلبه مجتمع أساعد في تنظيمه، وهاكاثون طلع منه مشروع حقيقي.",
-      ],
-    },
-    experiences: allExperiences.filter(
-      (entry) => entry.category === "community" || entry.category === "hackathon",
-    ),
-    followUps: [
-      { label: L("See everything", "ورّيني الكل"), targetId: "journey" },
-      { label: L("Show me the related projects", "ورّيني المشاريع المرتبطة"), targetId: "projects" },
-    ],
-  },
-
+  // -------------------------------------------------------------- Skills
   skills: {
     id: "skills",
     triggers: {
-      en: ["skill", "skills", "stack", "tech stack", "technology", "technologies", "tools", "what do you use"],
-      ar: ["مهارة", "مهارات", "أدوات", "تقنيات", "ما الذي تستخدمينه"],
+      en: ["skills", "stack", "tech stack", "technologies", "tools", "what do you work with"],
+      ar: ["مهاراتك", "ادواتك", "تقنيات", "وش تشتغلين فيه"],
     },
     paragraphs: {
       en: [
-        "My day-to-day splits between applied AI tooling and front-end craft — I try to hold both to the same bar.",
+        "The technologies and skills I work with, grouped by what I use them for rather than listed as one long line without context.",
       ],
       ar: [
-        "يومي مقسوم بين أدوات الذكاء الاصطناعي وحرفية الواجهات، وأحاول أطبّق نفس المستوى على الاثنين.",
+        "هذي أبرز التقنيات والمهارات اللي أشتغل فيها، مرتبة حسب نوع الاستخدام بدل قائمة طويلة بدون سياق.",
       ],
     },
-    techTags: [
-      "TypeScript",
-      "React",
-      "Node.js",
-      "Python",
-      "LLM Orchestration",
-      "Vector Search",
-      "WebGL",
-      "Framer Motion",
-      "PostgreSQL",
-      "FastAPI",
+    skillClusters: [
+      {
+        heading: L("AI", "الذكاء الاصطناعي"),
+        tags: [
+          "Python",
+          "LLM integration",
+          "Prompt engineering",
+          "Gemini API",
+          "RAG",
+          "AI agents & MCP workflows",
+          "Transformer-based NLP",
+          "scikit-learn",
+          "Feature engineering",
+          "Model evaluation",
+        ],
+      },
+      {
+        heading: L("Product development", "تطوير المنتجات"),
+        tags: [
+          "React",
+          "TypeScript",
+          "Firebase / Firestore",
+          "REST APIs",
+          "Flask",
+          "Tailwind CSS",
+          "Netlify",
+        ],
+      },
+      {
+        heading: L("XR, 3D and interactive", "XR و3D والتجارب التفاعلية"),
+        tags: [
+          "Unity",
+          "C#",
+          "XR Interaction Toolkit",
+          "AR & VR development",
+          "Vuforia",
+          "Three.js / React Three Fiber",
+          "Roblox Studio / Luau",
+        ],
+      },
+      {
+        heading: L("Data", "البيانات"),
+        tags: ["pandas", "NumPy", "SQL", "Data analysis & preprocessing"],
+      },
     ],
-    followUps: [
-      { label: L("Show me your work", "ورّيني شغلك"), targetId: "projects" },
-      { label: L("How do I reach you?", "كيف أوصل لك؟"), targetId: "contact" },
-    ],
+    followUps: [to(askWork, "work")],
   },
 
+  // ----------------------------------------------------------------- Now
+  now: {
+    id: "now",
+    triggers: {
+      en: ["now", "currently", "these days", "what are you up to", "side project"],
+      ar: ["حاليا", "هالفترة", "وش شغلك", "مشروع جانبي"],
+    },
+    paragraphs: {
+      en: [
+        "I'm in my final year, so a large part of my focus goes to my graduation project and getting ready for what comes next, while I look for a practical internship I can learn from and apply more in.",
+        "On the side, I'm working on a personal AI project where I put RAG, agents and connecting tools and APIs into practice. It doesn't have a name yet, and I'd rather wait until it's further along before showing it.",
+      ],
+      ar: [
+        "حاليًا أنا في سنة التخرج، فجزء كبير من تركيزي رايح لمشروع التخرج والاستعداد للمرحلة الجاية، وبنفس الوقت أبحث عن فرصة تدريب عملي أقدر أتعلم منها وأطبق أكثر.",
+        "وعلى الجانب، أشتغل على مشروع شخصي في الذكاء الاصطناعي أطبق فيه RAG والـagents وربط الأدوات والـAPIs بشكل عملي. للحين ما أعطيته اسم، وأفضّل أنتظر لين يكتمل أكثر قبل ما أعرضه.",
+      ],
+    },
+    followUps: [to(askWork, "work")],
+  },
+
+  // ------------------------------------------------------------- Contact
   contact: {
     id: "contact",
     triggers: {
-      en: ["contact", "email", "reach you", "hire", "get in touch", "linkedin", "work together"],
-      ar: ["تواصل", "بريد", "الوصول إليك", "توظيف", "لينكدإن", "العمل معاً"],
+      en: [
+        "contact",
+        "email",
+        "reach you",
+        "contact you",
+        "get in touch",
+        "how can i reach you",
+        "how do i contact you",
+        "hire",
+        "linkedin",
+        "cv",
+        "resume",
+      ],
+      ar: [
+        "تواصل",
+        "ايميل",
+        "كيف اوصلك",
+        "كيف اتواصل معك",
+        "شلون اتواصل معك",
+        "اتواصل معك",
+        "كيف اكلمك",
+        "اكلمك",
+        "ابي اتواصل",
+        "توظيف",
+        "لينكدان",
+        "السيرة الذاتية",
+      ],
     },
     paragraphs: {
       en: [
-        "Best way to reach me is email — I read everything and reply quickly. Happy to talk about roles, freelance work, or just interface ideas.",
+        "If you'd like to get in touch, these are the easiest ways:",
+        "I'm currently interested in internships and co-op opportunities, and open to opportunities and projects I can learn from and add to.",
       ],
       ar: [
-        "أسهل طريقة توصلني هي الإيميل، أقرأ كل شي وأرد بسرعة. يسعدني نتكلم عن وظيفة، شغل حر، أو حتى مجرد أفكار عن الواجهات.",
+        "إذا حاب تتواصل معي، هذي أسهل الطرق:",
+        "حاليًا مهتمة بفرص التدريب والتدريب التعاوني، وأرحب بالفرص والمشاريع اللي أقدر أتعلم منها وأضيف لها.",
       ],
     },
-    contact: [
-      { channel: "email", label: L("Email", "الإيميل"), value: EMAIL },
-      { channel: "linkedin", label: L("LinkedIn", "لينكدإن"), value: "https://linkedin.com" },
-      { channel: "github", label: L("GitHub", "غيت هَب"), value: "https://github.com" },
-    ],
-    cta: [{ label: L("Send an email", "راسلني على الإيميل"), url: EMAIL, variant: "primary" }],
+    contact: contactActions,
   },
 
-  /** Reached when nothing matches confidently — never a fabricated answer. */
+  /**
+   * Reached when nothing matches confidently — never a fabricated answer.
+   * The send button is built per message from the visitor's own question, so
+   * it lives in the renderer rather than here.
+   */
   fallback: {
     id: "fallback",
     paragraphs: {
-      en: [
-        "That's a good one — I'd rather answer it properly myself than guess at it here.",
-        "Send it over and I'll get back to you personally.",
-      ],
-      ar: [
-        "سؤال حلو — أفضّل أرد عليه بنفسي بدل ما أخمّن هنا.",
-        "أرسله لي وبرد عليك شخصياً.",
-      ],
+      en: ["I don't have a prepared answer for that, but you can send it to me directly."],
+      ar: ["ما عندي إجابة جاهزة لهذا السؤال، لكن تقدر ترسله لي مباشرة."],
     },
-    cta: [{ label: L("Send me your question", "أرسل لي سؤالك"), url: EMAIL, variant: "primary" }],
-    followUps: [
-      { label: L("Who are you?", "عرّفيني بنفسك"), targetId: "me" },
-      { label: L("Show me your work", "ورّيني شغلك"), targetId: "projects" },
-    ],
+    // No "how do I reach you?" hop — the Ask me directly button on this answer
+    // opens the email straight away, carrying the question with it.
+    followUps: [to(askWork, "work")],
   },
 };
 

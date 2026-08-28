@@ -5,29 +5,29 @@ export const identity: {
   greeting: Localized;
   role: Localized;
 } = {
-  name: L("Jawhara", "جوهرة"),
-  greeting: L("Hey, I'm Jawhara", "هلا، أنا جوهرة"),
+  name: L("Aljawhara", "الجوهرة"),
+  greeting: L("Hi, I'm Aljawhara. Glad you're here", "السلام عليكم، أنا الجوهرة"),
   role: L("AI Engineer", "مهندسة ذكاء اصطناعي"),
 };
 
 export const ui = {
-  inputPlaceholder: L("Ask me anything…", "اسألني عن أي شي…"),
+  inputPlaceholder: L("Ask me anything…", "اسألني عن أي شيء…"),
   send: L("Send", "إرسال"),
-  askLabel: L("Ask a question", "اطرح سؤالاً"),
+  askLabel: L("Ask a question", "اسأل سؤال"),
   hideTopics: L("Hide quick questions", "إخفاء الاقتراحات"),
   showTopics: L("Show quick questions", "عرض الاقتراحات"),
-  closeDetails: L("Close details", "إغلاق التفاصيل"),
+  closeDetails: L("Close", "إغلاق"),
+  /** Names the detail sheet for screen readers, which never see its heading. */
+  detailsLabel: L("Details", "التفاصيل"),
   thinking: L("Typing", "تكتب…"),
-  /** Shown above an answer when the match was only approximate. */
-  uncertain: L(
-    "I might not have caught that exactly — but this feels like the closest thing.",
-    "يمكن ما فهمت سؤالك بالضبط، بس أحس هذا أقرب شي ممكن يفيدك.",
-  ),
+  /**
+   * Shown above an approximate answer. Deliberately light: an approximate match
+   * is usually right, so it should read as a check rather than a failure.
+   */
+  uncertain: L("Did you mean this?", "يمكن تقصد هذا؟"),
   /** Closes an approximate answer with a way to reach a real reply. */
-  uncertainExit: L(
-    "If that wasn't quite what you meant, ask me directly and I'll get back to you.",
-    "وإذا مو هذا اللي تقصده، اسألني مباشرة وبرد عليك بأقرب وقت.",
-  ),
+  uncertainExit: L("Not what you meant?", "مو هذا اللي تقصده؟"),
+  /** Opens a mail composer carrying the visitor's question. Never a hop. */
   askDirectly: L("Ask me directly", "اسألني مباشرة"),
   backHome: L("Back to the start", "رجوع للبداية"),
   language: L("Language", "اللغة"),
@@ -39,7 +39,7 @@ export const ui = {
 export const sheet = {
   technologies: L("Technologies", "التقنيات"),
   skills: L("Skills", "المهارات"),
-  links: L("Links", "روابط"),
-  builtAt: L("Built at", "طلع من"),
-  workFrom: L("Work from this experience", "شغل طلع من هنا"),
+  links: L("Links", "الروابط"),
+  builtAt: L("Part of", "ضمن"),
+  workFrom: L("Projects from this experience", "مشاريع من هذه التجربة"),
 };

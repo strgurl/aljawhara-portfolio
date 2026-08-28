@@ -62,6 +62,17 @@ export function MessageStream({
     <div className="flex flex-col gap-6 lg:gap-8">
       {thread.map((entry, index) => {
         const animate = index >= baselineRef.current;
+        // The question this answer replies to, kept exactly as typed so the
+        // fallback can carry it into an email instead of losing it.
+        const asked =
+          entry.role === "bot"
+            ? thread
+                .slice(0, index)
+                .reverse()
+                .find((item): item is Extract<ThreadEntry, { role: "user" }> => item.role === "user")
+                ?.raw
+            : undefined;
+
         return entry.role === "user" ? (
           <UserMessage key={entry.id} text={userEntryText(entry, locale)} animate={animate} />
         ) : (
@@ -70,6 +81,7 @@ export function MessageStream({
             node={getNode(entry.nodeId)}
             showFollowUps={entry.id === lastBotEntryId && !isTyping}
             uncertain={entry.uncertain}
+            question={asked}
             animate={animate}
             onNavigate={onNavigate}
             onOpenProject={onOpenProject}

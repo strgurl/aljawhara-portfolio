@@ -8,6 +8,7 @@ const channelIcon: Record<ContactAction["channel"], LinkItem["icon"]> = {
   github: "github",
   x: "x",
   calendar: "link",
+  cv: "link",
 };
 
 interface LinkRowsProps {
@@ -35,15 +36,37 @@ export function LinkRows({ items, heading }: LinkRowsProps) {
         {items.map((item, index) => {
           const href = isContactAction(item) ? item.value : item.url;
           const icon = isContactAction(item) ? channelIcon[item.channel] : (item.icon ?? "link");
+          const divider = index !== items.length - 1 ? "border-b border-[var(--color-border)]" : "";
+          const row = "flex items-center justify-between gap-3 px-4 py-3.5 text-[14.5px]";
+
+          // No value yet: the row still shows what will be here, but is inert
+          // and visibly so. Nothing pretends to be a working link.
+          if (!href) {
+            return (
+              <div
+                key={t(item.label)}
+                aria-disabled
+                className={`${row} ${divider} cursor-default text-[var(--color-ink-tertiary)]`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <Icon name={icon ?? "link"} className="opacity-50" />
+                  {t(item.label)}
+                </span>
+              </div>
+            );
+          }
+
+          // Anything that isn't a mail hand-off leaves the page, and leaving
+          // the page would discard the conversation. New tab for those.
+          const leavesPage = !href.startsWith("mailto:");
+
           return (
             <a
               key={t(item.label)}
               href={href}
-              target={href.startsWith("http") ? "_blank" : undefined}
-              rel={href.startsWith("http") ? "noreferrer" : undefined}
-              className={`flex items-center justify-between gap-3 px-4 py-3.5 text-[14.5px] text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface)] ${
-                index !== items.length - 1 ? "border-b border-[var(--color-border)]" : ""
-              }`}
+              target={leavesPage ? "_blank" : undefined}
+              rel={leavesPage ? "noopener noreferrer" : undefined}
+              className={`${row} ${divider} text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface)]`}
             >
               <span className="flex items-center gap-2.5">
                 <Icon name={icon ?? "link"} className="text-[var(--color-ink-secondary)]" />

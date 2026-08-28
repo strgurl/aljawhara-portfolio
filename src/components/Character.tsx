@@ -70,7 +70,11 @@ export function Character({
         <img
           key={current}
           src={srcFor(current)}
-          alt={name}
+          /* Decorative in both slots. On the landing the greeting beside it
+             already says the name; in the header it sits inside a button that
+             carries its own label, where a second name would just compete. */
+          alt=""
+          aria-hidden
           width={size}
           height={size}
           className="h-full w-full select-none object-contain"

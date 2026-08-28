@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Internal editorial scaffolding, not part of the published site
+arabic-copy-review.md

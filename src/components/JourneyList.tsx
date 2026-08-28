@@ -54,6 +54,14 @@ export function JourneyList({ experiences, onOpen }: JourneyListProps) {
             <div className="flex flex-col gap-1.5 lg:gap-2">
               <div className="flex items-center justify-between gap-3">
                 <p className="min-w-0 truncate text-[15px] font-medium text-[var(--color-ink)] lg:overflow-visible lg:whitespace-normal lg:text-[17px] lg:tracking-tight">
+                  {/* Recognition leads, marked in the category colour so it
+                      reads as an outcome rather than as part of the title. */}
+                  {experience.outcome && (
+                    <span style={{ color: `var(${meta.colorVar})` }}>
+                      {t(experience.outcome)}
+                      {" · "}
+                    </span>
+                  )}
                   {t(experience.role)}
                   <span className="font-normal text-[var(--color-ink-secondary)]">
                     {" · "}
@@ -66,9 +74,12 @@ export function JourneyList({ experiences, onOpen }: JourneyListProps) {
                 />
               </div>
 
-              <p className="text-[13.5px] leading-snug text-[var(--color-ink-secondary)] lg:max-w-[62ch] lg:text-[14.5px] lg:leading-relaxed">
-                {t(experience.description)}
-              </p>
+              {/* Entries whose title already says everything carry no line. */}
+              {experience.description && (
+                <p className="text-[13.5px] leading-snug text-[var(--color-ink-secondary)] lg:max-w-[62ch] lg:text-[14.5px] lg:leading-relaxed">
+                  {t(experience.description)}
+                </p>
+              )}
             </div>
 
             <div className="hidden lg:flex lg:items-center lg:justify-end lg:self-center">
