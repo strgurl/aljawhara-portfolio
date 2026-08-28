@@ -10,9 +10,8 @@
     />
     <link rel="canonical" href="https://aljawhara-portfolio.netlify.app/" />
 
-    <!-- Link previews. No og:image yet: every cover here is portrait (0.80),
-         and cropping one to the 1.91 social ratio would misrepresent it. A
-         purpose-built 1200x630 image goes here when it exists. -->
+    <!-- Link previews. The card is built for 1200x630 rather than cropped
+         from the landing page, over the site's own fluid field. -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://aljawhara-portfolio.netlify.app/" />
     <meta property="og:site_name" content="Aljawhara Almoikel" />
@@ -21,15 +20,22 @@
       property="og:description"
       content="AI Engineer and BSc Artificial Intelligence candidate building applied AI, full-stack, and immersive XR projects."
     />
+    <meta property="og:image" content="https://aljawhara-portfolio.netlify.app/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Aljawhara Almoikel — AI Engineer" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="ar_SA" />
 
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Aljawhara Almoikel — AI Engineer" />
     <meta
       name="twitter:description"
       content="AI Engineer and BSc Artificial Intelligence candidate building applied AI, full-stack, and immersive XR projects."
     />
+    <meta name="twitter:image" content="https://aljawhara-portfolio.netlify.app/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Aljawhara Almoikel — AI Engineer" />
 
     <!-- Preload the Arabic weights carrying the most text, so switching to AR
          doesn't flash fallback glyphs. -->
