@@ -33,13 +33,15 @@ const to = (label: FollowUp["label"], targetId: string): FollowUp => ({ label, t
 /** The one shared bridge left in the graph. */
 const askWork = L("What have you worked on?", "وش مشاريعك؟");
 
-/** Navigation labels for the four Work cards. */
+/** Navigation labels for the Work cards, in the order the cards appear. */
 const projectChip = {
+  ebr: L("Tell me about Ebr", "كلميني عن عبر"),
+  alaQaddak: L("Tell me about Ala Qaddak", "كلميني عن على قدك"),
+  enterprise: L("Tell me about your graduation project", "كلميني عن مشروع تخرجك"),
   umbra: L("Tell me about UMBRA", "كلميني عن UMBRA"),
   vrlingo: L("Tell me about VRLingo", "كلميني عن VRLingo"),
   taazur: L("Tell me about Taazur", "كلميني عن تآزر"),
   portfolio: L("Tell me about this portfolio", "كلميني عن هذا الموقع"),
-  fanAlKabsa: L("Tell me about Fan Al Kabsa", "كلميني عن فن الكبسة"),
 };
 
 const umbraQuestions = {
@@ -105,20 +107,65 @@ export const conversationNodes: Record<string, ConversationNode> = {
     },
     paragraphs: {
       en: [
-        "A few of the projects I've built. Open any card for the idea behind it, how it works, and what it was built with.",
+        "Mostly applied AI: Arabic NLP models I trained and evaluated, and products built around them. Open any card for the idea behind it, how it works, and what it was built with.",
       ],
       ar: [
-        "هذي مجموعة من مشاريعي. اضغط على أي مشروع وبتلقى فكرته، تفاصيله، والتقنيات اللي استخدمناها.",
+        "أغلبه ذكاء اصطناعي تطبيقي: نماذج NLP عربية دربتها وقيّمتها، ومنتجات مبنية حولها. اضغط على أي مشروع وبتلقى فكرته، تفاصيله، والتقنيات اللي استخدمناها.",
       ],
     },
     projects: workProjects,
+    // Same order as the cards above, newest first.
     followUps: [
+      to(projectChip.enterprise, "project-enterprise-assistant"),
+      to(projectChip.alaQaddak, "project-ala-qaddak"),
       to(projectChip.umbra, "project-umbra"),
-      to(projectChip.vrlingo, "project-vrlingo"),
+      to(projectChip.ebr, "project-ebr"),
       to(projectChip.taazur, "project-taazur"),
+      to(projectChip.vrlingo, "project-vrlingo"),
       to(projectChip.portfolio, "project-portfolio"),
-      to(projectChip.fanAlKabsa, "project-fan-al-kabsa"),
     ],
+  },
+
+  // ----------------------------------------------------------------- Ebr
+  "project-ebr": {
+    id: "project-ebr",
+    triggers: {
+      en: ["ebr", "sentiment", "dialect", "arabic sentiment", "camelbert", "multi-task"],
+      ar: ["عبر", "تحليل المشاعر", "اللهجات", "لهجة", "المشاعر"],
+    },
+    paragraphs: projectsById.ebr.body,
+    projects: [projectsById.ebr],
+    followUps: [to(askWork, "work")],
+  },
+
+  // ---------------------------------------------------------- Ala Qaddak
+  "project-ala-qaddak": {
+    id: "project-ala-qaddak",
+    triggers: {
+      en: ["ala qaddak", "reading level", "text simplification", "arat5", "arbothon"],
+      ar: ["على قدك", "المستوى القرائي", "تبسيط النص", "أربثون", "اربثون"],
+    },
+    paragraphs: projectsById["ala-qaddak"].body,
+    projects: [projectsById["ala-qaddak"]],
+    followUps: [to(askWork, "work")],
+  },
+
+  // ------------------------------------------------- Graduation project
+  "project-enterprise-assistant": {
+    id: "project-enterprise-assistant",
+    triggers: {
+      en: [
+        "graduation project",
+        "enterprise ai knowledge assistant",
+        "knowledge assistant",
+        "rag assistant",
+        "rag",
+      ],
+      ar: ["مشروع التخرج", "مشروع تخرجك", "مساعد المعرفة", "المساعد المعرفي"],
+    },
+    paragraphs: projectsById["enterprise-assistant"].body,
+    projects: [projectsById["enterprise-assistant"]],
+    followUps: [to(askWork, "work")],
   },
 
   // --------------------------------------------------------------- UMBRA
@@ -316,17 +363,6 @@ export const conversationNodes: Record<string, ConversationNode> = {
     followUps: [to(askWork, "work")],
   },
 
-  // --------------------------------------------------------- Fan Al Kabsa
-  "project-fan-al-kabsa": {
-    id: "project-fan-al-kabsa",
-    triggers: {
-      en: ["fan al kabsa", "roblox", "restaurant game", "roblox game"],
-      ar: ["فن الكبسة", "فن الكبسه", "روبلوكس", "لعبة المطعم"],
-    },
-    paragraphs: projectsById["fan-al-kabsa"].body,
-    projects: [projectsById["fan-al-kabsa"]],
-    followUps: [to(askWork, "work")],
-  },
 
   // ------------------------------------------------------------- Journey
   journey: {
@@ -346,7 +382,6 @@ export const conversationNodes: Record<string, ConversationNode> = {
         "graduation",
         "graduation year",
         "when do you graduate",
-        "graduation project",
         "degree",
         "major",
       ],
@@ -360,7 +395,6 @@ export const conversationNodes: Record<string, ConversationNode> = {
         "سنة التخرج",
         "متى تتخرجين",
         "تخرجك",
-        "مشروع التخرج",
         "تخصصك",
       ],
     },
@@ -448,15 +482,18 @@ export const conversationNodes: Record<string, ConversationNode> = {
     },
     paragraphs: {
       en: [
-        "I'm in my final year, so a large part of my focus goes to my graduation project and getting ready for what comes next, while I look for a practical internship I can learn from and apply more in.",
+        "I'm in my final year, so a large part of my focus goes to my graduation project — an enterprise knowledge assistant built on RAG, currently through its design and architecture — and to getting ready for what comes next, while I look for a practical internship I can learn from and apply more in.",
         "On the side, I'm working on a personal AI project where I put RAG, agents and connecting tools and APIs into practice. It doesn't have a name yet, and I'd rather wait until it's further along before showing it.",
       ],
       ar: [
-        "حاليًا أنا في سنة التخرج، فجزء كبير من تركيزي رايح لمشروع التخرج والاستعداد للمرحلة الجاية، وبنفس الوقت أبحث عن فرصة تدريب عملي أقدر أتعلم منها وأطبق أكثر.",
+        "حاليًا أنا في سنة التخرج، فجزء كبير من تركيزي رايح لمشروع التخرج — مساعد معرفي للشركات مبني على RAG، حاليًا في مرحلة التصميم والبنية التقنية — والاستعداد للمرحلة الجاية، وبنفس الوقت أبحث عن فرصة تدريب عملي أقدر أتعلم منها وأطبق أكثر.",
         "وعلى الجانب، أشتغل على مشروع شخصي في الذكاء الاصطناعي أطبق فيه RAG والـagents وربط الأدوات والـAPIs بشكل عملي. للحين ما أعطيته اسم، وأفضّل أنتظر لين يكتمل أكثر قبل ما أعرضه.",
       ],
     },
-    followUps: [to(askWork, "work")],
+    followUps: [
+      to(projectChip.enterprise, "project-enterprise-assistant"),
+      to(askWork, "work"),
+    ],
   },
 
   // ------------------------------------------------------------- Contact

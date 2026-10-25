@@ -56,10 +56,22 @@
   --color-accent-soft: #eaeeff;
   --color-on-accent: #ffffff;
 
-  /* Card ground colors — desaturated, no neon */
-  --color-card-graphite: #17181c;
-  --color-card-plum: #221925;
-  --color-card-pine: #131d1a;
+  /* Card ground colors — tinted printing stock, matched to the cover artwork.
+     The covers are risograph-style prints on cream, so a card reads as the
+     sheet they were printed on. The three names are unchanged, so no project
+     data moves; only the stock they name is now paper rather than near-black. */
+  --color-card-graphite: #ece7da;
+  --color-card-plum: #f2e8e3;
+  --color-card-pine: #e8eee1;
+
+  /* The paper the covers are printed on, sampled from the artwork itself.
+     Card text sits on a wash of this rather than on a dark scrim. */
+  --color-card-paper: 250, 242, 226;
+
+  /* Secondary ink for card faces. Darker than --color-ink-secondary because
+     that tone is tuned for the page's flat surfaces, and over a wash that
+     still lets artwork through it measures below 4.5:1 at the eyebrow's size. */
+  --color-card-ink-secondary: #55555a;
 
   /* Identity glow — the one signature ambient hue, used only as soft blurred light */
   --color-glow: #ff7a52;
@@ -220,8 +232,8 @@ button {
   will-change: transform;
 }
 
-/* Fine film grain — gives the dark project cards material, so they read as
-   surfaces rather than flat fills. Purely decorative. */
+/* Fine film grain — gives the project cards material, so they read as printed
+   stock rather than flat fills. Purely decorative. */
 .grain::after {
   content: "";
   position: absolute;

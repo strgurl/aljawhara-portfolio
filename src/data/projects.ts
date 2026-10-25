@@ -107,7 +107,147 @@ const arRecipeGallery = [
   },
 ];
 
+/**
+ * The research poster the team presented at Arbothon 2. One file for both
+ * locales — it is bilingual, and its value is in the pipeline diagram and the
+ * results tables rather than in prose.
+ */
+const alaQaddakGallery = [
+  {
+    src: "/projects/ala-qaddak/poster.jpg",
+    alt: L(
+      "The Ala Qaddak research poster: the pipeline from the SAMER dataset through the change/keep detector to the two generation modes, with the BLEU and ROUGE results beside it.",
+      "بوستر مشروع على قدك: المسار من مجموعة SAMER مرورًا بكاشف التغيير/الإبقاء إلى وضعي التوليد، وجنبه نتائج BLEU وROUGE.",
+    ),
+  },
+];
+
+/**
+ * Captures of the deployed model: the team's own web interface, and the Gradio
+ * build behind it. Same two files in both locales — the interface is Arabic
+ * either way, so only the alt text changes.
+ */
+const ebrGallery = [
+  {
+    src: "/projects/ebr/interface.jpg",
+    alt: L(
+      "The Ebr web interface classifying an Egyptian-dialect sentence as positive with 99% confidence.",
+      "واجهة عبر وهي تصنّف جملة باللهجة المصرية على أنها إيجابية بثقة ٩٩٪.",
+    ),
+  },
+  {
+    src: "/projects/ebr/gradio.png",
+    alt: L(
+      "The Gradio build reading a Saudi sentence as negative after correcting for negation, with the dialect identified as Saudi.",
+      "نسخة Gradio وهي تقرأ جملة سعودية على أنها سلبية بعد تصحيح النفي، مع تحديد اللهجة سعودية.",
+    ),
+  },
+];
+
 export const projectsById: Record<string, ProjectCard> = {
+  "enterprise-assistant": {
+    id: "enterprise-assistant",
+    eyebrow: L("Graduation Project", "مشروع التخرج"),
+    title: "Enterprise AI Knowledge Assistant",
+    status: L("Work in progress", "جاري العمل عليه"),
+    ground: "plum",
+    year: "2026 – 2027",
+    summary: L(
+      "A RAG assistant for the questions employees actually ask.",
+      "مساعد RAG للأسئلة اللي يسألها الموظفون فعلًا.",
+    ),
+    body: {
+      en: [
+        "Employees ask the same questions about policies, leave, benefits and insurance, and the answers sit buried in long internal documents nobody reads end to end.",
+        "My graduation project is a retrieval-augmented generation assistant that answers those questions from the company's own documents. Design and architecture are complete; implementation begins in the second semester.",
+      ],
+      ar: [
+        "الموظفون يسألون نفس الأسئلة عن السياسات والإجازات والمزايا والتأمين، والإجابات مدفونة في مستندات داخلية طويلة ما أحد يقراها كاملة.",
+        "مشروع تخرجي مساعد retrieval-augmented generation يجاوب على هذي الأسئلة من مستندات الشركة نفسها. التصميم والبنية التقنية خلصوا، والتنفيذ يبدأ في الفصل الثاني.",
+      ],
+    },
+    cover: {
+      src: "/projects/enterprise-assistant/cover.jpg",
+      alt: L(
+        "A tall stack of documents funnelling down into a single index card drawn inside draft guide lines.",
+        "كومة مستندات طويلة تنزل عبر قمع إلى بطاقة واحدة مرسومة داخل خطوط تصميم أولية.",
+      ),
+    },
+    domains: ["RAG", "LLMs", "NLP"],
+    tags: ["RAG", "LLMs", "Arabic NLP", "Python"],
+    experienceIds: ["pnu"],
+    // Artwork only. No links and no video: nothing is deployed, and none will
+    // be invented.
+  },
+
+
+  "ala-qaddak": {
+    id: "ala-qaddak",
+    eyebrow: L("Arbothon 2 · Faseeh Award", "أربثون ٢ · جائزة فصيح"),
+    title: "Ala Qaddak",
+    titleLocalized: L("Ala Qaddak", "على قدك"),
+    ground: "graphite",
+    year: "2026",
+    summary: L(
+      "Simplifies Arabic down to the reading level you ask for.",
+      "يبسّط النص العربي إلى المستوى القرائي اللي تطلبه.",
+    ),
+    domains: ["NLP", "Fine-Tuning", "Text Generation"],
+    body: {
+      en: [
+        "The same paragraph can be right for one reader and out of reach for another. Rewriting Arabic by hand is slow, and tools that try it usually flatten the meaning or quietly copy the original back to you.",
+        "Ala Qaddak, built in October 2026, fine-tunes AraT5 to adapt Modern Standard Arabic from one reading level to an easier one — L5 to L4, L4 to L3, or L5 straight to L3. Every transformation is conditioned on both the source level and the target level, so the model knows how far it is being asked to move. It received the Faseeh Award at the Arbothon 2 hackathon at Princess Nourah University.",
+      ],
+      ar: [
+        "نفس الفقرة ممكن تكون مناسبة لقارئ وصعبة على قارئ ثاني. وإعادة صياغة النص العربي يدويًا بطيئة، والأدوات اللي تحاول تسويها عادة تفقد المعنى أو ترجّع لك النص الأصلي كما هو.",
+        "على قدك، المبني في أكتوبر ٢٠٢٦، يضبط AraT5 لنقل العربية الفصحى من مستوى قرائي إلى مستوى أسهل — من L5 إلى L4، أو من L4 إلى L3، أو من L5 مباشرة إلى L3. كل تحويل مربوط بالمستوى الأصلي والمستوى الهدف، عشان النموذج يعرف قد إيش مطلوب منه ينقل النص. وحصل المشروع على جائزة فصيح في هاكاثون أربثون ٢ بجامعة الأميرة نورة.",
+      ],
+    },
+    sections: [
+      {
+        heading: L("How it works", "كيف يشتغل"),
+        paragraphs: {
+          en: [
+            "A change/keep detector runs first and flags only the expressions that actually need simplifying. If the target level already matches the source, the text comes back untouched — which matters, because 62% of the test set was already at its target level.",
+            "What survives the detector goes through one model in two sequential modes. The first predicts the lexical transformations a sentence needs; the second takes those predictions, plus the source sentence and the target level, and generates the adapted sentence. One model, two modes — not two separately trained models.",
+          ],
+          ar: [
+            "أول شي يشتغل كاشف التغيير/الإبقاء، ويحدد بس التعابير اللي فعلًا تحتاج تبسيط. وإذا كان المستوى الهدف مطابق للمستوى الأصلي، النص يرجع كما هو — وهذي نقطة مهمة، لأن ٦٢٪ من مجموعة الاختبار كانت أصلًا على مستواها الهدف.",
+            "اللي يعدي الكاشف يروح لنموذج واحد بوضعين متتاليين. الأول يتوقع التحويلات اللفظية اللي تحتاجها الجملة، والثاني ياخذ هذي التوقعات مع الجملة الأصلية والمستوى الهدف ويولّد الجملة المعدّلة. نموذج واحد بوضعين، مو نموذجين مدربين بشكل منفصل.",
+          ],
+        },
+      },
+      {
+        heading: L("Training and results", "التدريب والنتائج"),
+        paragraphs: {
+          en: [
+            "V3 was fine-tuned from AraT5v2-base on the SAMER Arabic reading-level dataset: 44,321 examples, 25,763 lexical and 18,558 guided, over 3 epochs to a final loss of 0.64.",
+            "On the final test set of 9,831 sentences it reached BLEU 68.17, ROUGE-1 85.38, ROUGE-2 67.66 and ROUGE-L 85.38. The L5→L3 jump is consistently the hardest of the three transitions, which is what you would expect from the one that has to travel furthest.",
+            "The honest caveat: BLEU and ROUGE measure overlap with the reference, not simplification quality. Semantic preservation and reading-level adaptation were not yet measured directly.",
+          ],
+          ar: [
+            "النسخة الثالثة انضبطت من AraT5v2-base على مجموعة SAMER للمستويات القرائية العربية: ٤٤٬٣٢١ مثال، منها ٢٥٬٧٦٣ لفظي و١٨٬٥٥٨ موجّه، على ٣ دورات تدريب وبخسارة نهائية ٠٫٦٤.",
+            "على مجموعة الاختبار النهائية (٩٬٨٣١ جملة) وصل إلى BLEU ٦٨٫١٧ وROUGE-1 ٨٥٫٣٨ وROUGE-2 ٦٧٫٦٦ وROUGE-L ٨٥٫٣٨. والانتقال من L5 إلى L3 هو الأصعب باستمرار بين الانتقالات الثلاثة، وهو المتوقع من الانتقال اللي يقطع أطول مسافة.",
+            "التحفظ الصريح: BLEU وROUGE يقيسان التطابق مع النص المرجعي، مو جودة التبسيط نفسها. والحفاظ على المعنى ومطابقة المستوى القرائي ما انقاسوا بشكل مباشر لين الآن.",
+          ],
+        },
+      },
+    ],
+    cover: {
+      src: "/projects/ala-qaddak/cover.jpg",
+      alt: L(
+        "A hand turning a dial, with dense lines of text on one side and spaced-out ones on the other.",
+        "يد تلف قرص تحكم، وعلى جهة سطور نص متراصة وعلى الجهة الثانية سطور متباعدة.",
+      ),
+    },
+    // The team's own poster. Same file in both locales: it is bilingual and
+    // the diagrams carry the meaning, so only the alt text changes.
+    gallery: { en: alaQaddakGallery, ar: alaQaddakGallery },
+    tags: ["AraT5", "Fine-Tuning", "Arabic NLP", "Hugging Face"],
+    experienceIds: ["pnu"],
+  },
+
+
   umbra: {
     id: "umbra",
     eyebrow: L("AI Champions · Winning project", "مشروع فائز في AI Champions"),
@@ -148,8 +288,8 @@ export const projectsById: Record<string, ProjectCard> = {
     cover: {
       src: "/projects/umbra/cover.jpg",
       alt: L(
-        "Two walking routes across a night map of Riyadh, one lit by sun, one shaded.",
-        "مساران للمشي على خريطة ليلية للرياض، واحد تحت الشمس وواحد في الظل.",
+        "A street map with the sun casting a long building shadow, and two walking routes across it — one in the shade, one in the open.",
+        "خريطة شوارع والشمس ترمي ظل مبنى طويل، وفوقها مساران للمشي — واحد في الظل وواحد في الشمس.",
       ),
     },
     video: {
@@ -195,6 +335,7 @@ export const projectsById: Record<string, ProjectCard> = {
         },
       ],
     },
+    domains: ["LLM API", "Maps", "3D"],
     tags: ["React", "TypeScript", "Leaflet", "Gemini 2.5 Flash", "Three.js", "Netlify"],
     // The repo is not public, so only the deployed build is linked.
     links: [
@@ -207,70 +348,91 @@ export const projectsById: Record<string, ProjectCard> = {
     experienceIds: ["ai-champions"],
   },
 
-  vrlingo: {
-    id: "vrlingo",
-    eyebrow: L("XR Bootcamp · Tuwaiq Academy", "معسكر XR · أكاديمية طويق"),
-    title: "VRLingo",
+
+  ebr: {
+    id: "ebr",
+    // Short enough to hold two lines on the mobile card. A third line would
+    // run into the dark bubble in the artwork's top corner, and no paper wash
+    // strong enough to fix that would leave the print worth looking at. The
+    // exhibition is named in full in the body.
+    eyebrow: L("Ufuq · Audience Choice Award", "أفق · جائزة اختيار الجمهور"),
+    title: "Ebr",
+    titleLocalized: L("Ebr", "عبر"),
     ground: "plum",
-    year: "2025",
+    year: "2026",
     summary: L(
-      "Learn a language inside an interactive VR experience.",
-      "تعلّم اللغة داخل تجربة VR تفاعلية.",
+      "A multi-task model that reads sentiment and dialect together.",
+      "نموذج متعدد المهام يقرأ المشاعر واللهجة مع بعض.",
     ),
+    domains: ["NLP", "Model Training", "Deployment"],
     body: {
       en: [
-        "VRLingo is a language-learning experience in virtual reality, instead of practice being confined to a screen and a set of ready-made questions.",
-        "The journey starts at Tuwaiq Airport. You hear the boarding call, choose between New York and Mexico, and step into an environment built so that you use the language inside situations and interactions close to real life.",
+        "Arabic sentiment models usually assume one standard variety, so their accuracy drops the moment real text arrives in Saudi, Egyptian or Jordanian Arabic.",
+        "Ebr, built in May 2026, classifies sentiment and dialect at the same time rather than treating them as two separate problems. CamelBERT-mix reached 83.6% accuracy on sentiment and 91.4% on dialect. It received the Audience Choice Award at the Ufuq exhibition at Princess Nourah University.",
       ],
       ar: [
-        "VRLingo تجربة لتعلّم اللغة بالواقع الافتراضي، بدل ما تكون الممارسة محصورة في شاشة وأسئلة جاهزة.",
-        "تبدأ الرحلة من مطار طويق، تسمع نداء الركاب وتختار وجهتك بين نيويورك والمكسيك، وبعدها تدخل بيئة صُممت عشان تستخدم اللغة داخل مواقف وتفاعلات قريبة من الواقع.",
+        "نماذج تحليل المشاعر بالعربي عادة تفترض لهجة واحدة، فتنزل دقتها أول ما يجيها نص حقيقي بالسعودي أو المصري أو الأردني.",
+        "عبر، المبني في مايو ٢٠٢٦، يصنّف المشاعر واللهجة في نفس الوقت بدل ما يتعامل معهم كمسألتين منفصلتين. CamelBERT-mix وصل إلى دقة ٨٣.٦٪ في المشاعر و٩١.٤٪ في اللهجة. وحصل المشروع على جائزة اختيار الجمهور في معرض أفق بجامعة الأميرة نورة.",
       ],
     },
     sections: [
       {
-        heading: L("Inside the experience", "داخل التجربة"),
+        heading: L("The data", "البيانات"),
         paragraphs: {
           en: [
-            "In New York you speak with Convai characters in the street and the café, order and talk with them, and when you get something wrong the characters are set up to help and correct you. In the same environment we added vocabulary activities, like matching pictures to words and interacting with objects so their names and letters appear.",
-            "In Mexico we tried to tie the learning to the place and the culture: a market with characters to talk to, a sombrero you can wear and learn the name of in Spanish, a piñata you can hit so items drop for you to learn their names, and music and dancing in the square.",
-            "The conversational characters run on Convai. We gave each one a role, a context and a way of interacting that suits the place, so the conversation is part of the experience rather than a separate menu of options.",
-            "We built it as a team over about a week at the Tuwaiq bootcamp, and the work overlapped between us from start to finish. We tried things, adjusted, and learned from each other until we had a version we could test on the headset and publish.",
+            "We collected 30,591 YouTube comments across Saudi, Egyptian and Jordanian Arabic, with a separate collection script per dialect so the three sets wouldn't bleed into each other. Labels were drafted automatically and then reviewed and corrected by hand before training.",
+            "Preprocessing was built for dialect, not for Modern Standard Arabic: normalising the many spellings of the same word, tagging every word after a negation particle so the model sees that the sentiment flipped, and mapping a verb's dialectal forms back to one root.",
           ],
           ar: [
-            "في نيويورك تقدر تتفاعل بصوتك مع شخصيات Convai في الشارع والمقهى، تطلب وتتحدث معهم، وإذا أخطأت في الكلام تكون الشخصيات مهيأة لمساعدتك وتصحيحك. وفي البيئة نفسها أضفنا أنشطة للمفردات، مثل مطابقة الصور بالكلمات والتفاعل مع الأشياء لتظهر أسماؤها وحروفها.",
-            "وفي المكسيك حاولنا نخلي التعلم مرتبط بالبيئة والثقافة: سوق وشخصيات تتحدث معها، قبعة مكسيكية تقدر تلبسها وتتعلم اسمها بالإسبانية، بينياتا تتفاعل معها وتسقط منها عناصر تتعلم أسماءها، وموسيقى ورقصات داخل الساحة.",
-            "الشخصيات الحوارية تعمل عبر Convai. جهزنا لكل شخصية دورًا وسياقًا وطريقة تفاعل تناسب المكان، بحيث يكون الحوار جزءًا من التجربة نفسها بدل ما يكون قائمة خيارات منفصلة.",
-            "بنيناه كفريق خلال حوالي أسبوع في معسكر طويق، وكان الشغل بيننا متداخل من البداية للنهاية. جرّبنا، عدّلنا، وتعلمنا من بعض لين وصلنا لنسخة نقدر نجربها على النظارة وننشرها.",
+            "جمعنا ٣٠٬٥٩١ تعليق من يوتيوب باللهجات السعودية والمصرية والأردنية، وبسكربت جمع منفصل لكل لهجة عشان ما تتداخل المجموعات الثلاث. التصنيفات انكتبت آليًا أول، وبعدها راجعناها وصححناها يدويًا قبل التدريب.",
+            "المعالجة المسبقة انبنت للهجة مو للفصحى: توحيد الإملاءات المختلفة للكلمة الواحدة، ووسم كل كلمة بعد أداة نفي عشان النموذج يشوف إن المشاعر انقلبت، وإرجاع صيغ الفعل اللهجية إلى جذر واحد.",
+          ],
+        },
+      },
+      {
+        heading: L("Why CamelBERT", "ليش CamelBERT"),
+        paragraphs: {
+          en: [
+            "We fine-tuned three Arabic transformers under identical conditions: AraBERT v2, MARBERTv2 and CamelBERT-mix. Each one learns sentiment and dialect from a shared representation, with the loss weighted toward sentiment as the main task.",
+            "CamelBERT-mix won on every metric despite having 53 million fewer parameters than the other two — 110M against 163M. It was also the only one that kept improving through all 8 epochs instead of overfitting at epoch 5. Pretraining on a balanced mix of formal and dialectal Arabic mattered more than model size.",
+            "The most useful surprise came earlier: character-level TF-IDF beat the frozen embeddings of all three transformers. A transformer's power is in what fine-tuning unlocks, not in its embeddings as they come.",
+          ],
+          ar: [
+            "ضبطنا ثلاثة نماذج عربية تحت نفس الظروف: AraBERT v2 وMARBERTv2 وCamelBERT-mix. كل واحد يتعلم المشاعر واللهجة من تمثيل مشترك، والخسارة مرجّحة ناحية المشاعر باعتبارها المهمة الأساسية.",
+            "CamelBERT-mix تفوّق في كل المقاييس رغم إن عنده ٥٣ مليون معامل أقل من الاثنين الباقيين — ١١٠ مليون مقابل ١٦٣ مليون. وكان كمان الوحيد اللي استمر يتحسن على طول الدورات الثماني بدل ما يحفظ البيانات عند الدورة الخامسة. التدريب المسبق على خليط متوازن من الفصحى واللهجات كان أهم من حجم النموذج.",
+            "وأنفع مفاجأة جت قبل كذا: TF-IDF على مستوى الحروف تفوّق على التمثيلات المجمّدة للنماذج الثلاثة كلها. قوة النموذج المحوّل في اللي يفتحه الضبط الدقيق، مو في تمثيلاته كما هي.",
+          ],
+        },
+      },
+      {
+        heading: L("Where it falls short", "وين يقصّر"),
+        paragraphs: {
+          en: [
+            "Jordanian was the weakest dialect across all three models, and the reason is plain: 7,616 samples against 12,980 for Saudi and 9,995 for Egyptian. Less data, less to learn from.",
+            "Three dialects is also only three. Dialect purity can't be fully guaranteed either — people mix dialects, and mix Arabic with English, inside a single comment.",
+          ],
+          ar: [
+            "الأردني كان الأضعف في النماذج الثلاثة كلها، والسبب واضح: ٧٬٦١٦ عينة مقابل ١٢٬٩٨٠ للسعودي و٩٬٩٩٥ للمصري. بيانات أقل، وتعلّم أقل.",
+            "وثلاث لهجات تبقى ثلاث لهجات بس. ونقاء اللهجة مو مضمون تمامًا كذلك — الناس تخلط اللهجات، وتخلط العربي بالإنجليزي، داخل التعليق الواحد.",
           ],
         },
       },
     ],
     cover: {
-      src: "/projects/vrlingo/cover.jpg",
+      src: "/projects/ebr/cover.jpg",
       alt: L(
-        "Someone in a VR headset between two scenes, a New York bakery and a Mexican market.",
-        "شخص يلبس نظارة واقع افتراضي بين مشهدين، مخبز في نيويورك وسوق في المكسيك.",
+        "Three Arabic speech bubbles of different shapes passing through a prism that splits them into two ribbons.",
+        "ثلاث فقاعات كلام عربية بأشكال مختلفة تمر عبر منشور يفرّقها إلى شريطين.",
       ),
     },
-    video: {
-      src: "/projects/vrlingo/demo.mp4",
-    },
-    // Same captures either way: gameplay is gameplay, and no English-build
-    // equivalents of these moments exist.
-    gallery: { en: vrlingoGallery, ar: vrlingoGallery },
-    tags: ["Unity", "C#", "XR Interaction Toolkit", "Convai", "Meta Quest"],
-    // A headset build has no browser demo, so the store listing is the public
-    // destination and stands alone.
-    links: [
-      {
-        label: L("View on SideQuest", "عرض على SideQuest"),
-        url: "https://sidequestvr.com/app/44202/vrlingo",
-        icon: "link",
-      },
-    ],
-    experienceIds: ["xr-bootcamp"],
+    // Same two captures either way: the model's own interface is Arabic.
+    gallery: { en: ebrGallery, ar: ebrGallery },
+    tags: ["CamelBERT", "Multi-Task Learning", "Arabic NLP", "PyTorch", "Gradio"],
+    experienceIds: ["pnu"],
+    // Deployed publicly on Hugging Face Spaces, but the report doesn't carry
+    // the URL and it will not be guessed. Add `links` once it's to hand.
   },
+
 
   taazur: {
     id: "taazur",
@@ -278,6 +440,9 @@ export const projectsById: Record<string, ProjectCard> = {
     title: "Taazur",
     titleLocalized: L("Taazur", "تآزر"),
     ground: "pine",
+    // Second-term coursework. Only the year is stated, because only the year
+    // is certain.
+    year: "2026",
     summary: L(
       "Build a team that completes your skills instead of repeating them.",
       "كوّن فريقًا يكمل مهاراتك، مو يكررها.",
@@ -323,8 +488,8 @@ export const projectsById: Record<string, ProjectCard> = {
     cover: {
       src: "/projects/taazur/cover.jpg",
       alt: L(
-        "A team icon at the centre of a puzzle, connected to people with different skills.",
-        "أيقونة فريق في وسط أحجية، متصلة بأشخاص بمهارات مختلفة.",
+        "Two puzzle pieces meeting, each carrying different tools, their shapes cut to fit each other.",
+        "قطعتا أحجية تلتقيان، كل وحدة تحمل أدوات مختلفة، وشكل كل وحدة مفصّل ليكمل الثانية.",
       ),
     },
     video: {
@@ -332,6 +497,7 @@ export const projectsById: Record<string, ProjectCard> = {
     },
     // Same screens either way: the product's own interface is English only.
     gallery: { en: taazurGallery, ar: taazurGallery },
+    domains: ["ML", "Full-Stack", "API"],
     tags: ["React", "Firebase Authentication", "Firestore", "Flask", "Python", "scikit-learn"],
     // Built for a university course, so it surfaces under the degree entry in
     // Journey. Stored here only; the reverse lookup is derived.
@@ -349,6 +515,79 @@ export const projectsById: Record<string, ProjectCard> = {
       },
     ],
   },
+
+  /**
+   * Unfinished, so `status` quiets the card — but there is a real idea and a
+   * real architecture to read, so it stays openable.
+   */
+
+
+  vrlingo: {
+    id: "vrlingo",
+    eyebrow: L("XR Bootcamp · Tuwaiq Academy", "معسكر XR · أكاديمية طويق"),
+    title: "VRLingo",
+    ground: "plum",
+    year: "2025",
+    summary: L(
+      "Learn a language inside an interactive VR experience.",
+      "تعلّم اللغة داخل تجربة VR تفاعلية.",
+    ),
+    body: {
+      en: [
+        "VRLingo is a language-learning experience in virtual reality, instead of practice being confined to a screen and a set of ready-made questions.",
+        "The journey starts at Tuwaiq Airport. You hear the boarding call, choose between New York and Mexico, and step into an environment built so that you use the language inside situations and interactions close to real life.",
+      ],
+      ar: [
+        "VRLingo تجربة لتعلّم اللغة بالواقع الافتراضي، بدل ما تكون الممارسة محصورة في شاشة وأسئلة جاهزة.",
+        "تبدأ الرحلة من مطار طويق، تسمع نداء الركاب وتختار وجهتك بين نيويورك والمكسيك، وبعدها تدخل بيئة صُممت عشان تستخدم اللغة داخل مواقف وتفاعلات قريبة من الواقع.",
+      ],
+    },
+    sections: [
+      {
+        heading: L("Inside the experience", "داخل التجربة"),
+        paragraphs: {
+          en: [
+            "In New York you speak with Convai characters in the street and the café, order and talk with them, and when you get something wrong the characters are set up to help and correct you. In the same environment we added vocabulary activities, like matching pictures to words and interacting with objects so their names and letters appear.",
+            "In Mexico we tried to tie the learning to the place and the culture: a market with characters to talk to, a sombrero you can wear and learn the name of in Spanish, a piñata you can hit so items drop for you to learn their names, and music and dancing in the square.",
+            "The conversational characters run on Convai. We gave each one a role, a context and a way of interacting that suits the place, so the conversation is part of the experience rather than a separate menu of options.",
+            "We built it as a team over about a week at the Tuwaiq bootcamp, and the work overlapped between us from start to finish. We tried things, adjusted, and learned from each other until we had a version we could test on the headset and publish.",
+          ],
+          ar: [
+            "في نيويورك تقدر تتفاعل بصوتك مع شخصيات Convai في الشارع والمقهى، تطلب وتتحدث معهم، وإذا أخطأت في الكلام تكون الشخصيات مهيأة لمساعدتك وتصحيحك. وفي البيئة نفسها أضفنا أنشطة للمفردات، مثل مطابقة الصور بالكلمات والتفاعل مع الأشياء لتظهر أسماؤها وحروفها.",
+            "وفي المكسيك حاولنا نخلي التعلم مرتبط بالبيئة والثقافة: سوق وشخصيات تتحدث معها، قبعة مكسيكية تقدر تلبسها وتتعلم اسمها بالإسبانية، بينياتا تتفاعل معها وتسقط منها عناصر تتعلم أسماءها، وموسيقى ورقصات داخل الساحة.",
+            "الشخصيات الحوارية تعمل عبر Convai. جهزنا لكل شخصية دورًا وسياقًا وطريقة تفاعل تناسب المكان، بحيث يكون الحوار جزءًا من التجربة نفسها بدل ما يكون قائمة خيارات منفصلة.",
+            "بنيناه كفريق خلال حوالي أسبوع في معسكر طويق، وكان الشغل بيننا متداخل من البداية للنهاية. جرّبنا، عدّلنا، وتعلمنا من بعض لين وصلنا لنسخة نقدر نجربها على النظارة وننشرها.",
+          ],
+        },
+      },
+    ],
+    cover: {
+      src: "/projects/vrlingo/cover.jpg",
+      alt: L(
+        "A VR headset whose two lenses open onto different places — a New York street and a Mexican square — with a speech bubble over each.",
+        "نظارة واقع افتراضي، كل عدسة تطل على مكان مختلف — شارع في نيويورك وساحة مكسيكية — وفوق كل وحدة فقاعة كلام.",
+      ),
+    },
+    video: {
+      src: "/projects/vrlingo/demo.mp4",
+    },
+    // Same captures either way: gameplay is gameplay, and no English-build
+    // equivalents of these moments exist.
+    gallery: { en: vrlingoGallery, ar: vrlingoGallery },
+    domains: ["VR", "Unity", "Conversational AI"],
+    tags: ["Unity", "C#", "XR Interaction Toolkit", "Convai", "Meta Quest"],
+    // A headset build has no browser demo, so the store listing is the public
+    // destination and stands alone.
+    links: [
+      {
+        label: L("View on SideQuest", "عرض على SideQuest"),
+        url: "https://sidequestvr.com/app/44202/vrlingo",
+        icon: "link",
+      },
+    ],
+    experienceIds: ["xr-bootcamp"],
+  },
+
 
   portfolio: {
     id: "portfolio",
@@ -413,10 +652,11 @@ export const projectsById: Record<string, ProjectCard> = {
     cover: {
       src: "/projects/portfolio/cover.jpg",
       alt: L(
-        "A glass conversation panel of message bubbles over drifting light.",
-        "لوحة محادثة زجاجية فيها فقاعات رسائل فوق ضوء متحرك.",
+        "A large speech bubble holding a fan of cards, with one being drawn out and a cursor beside it.",
+        "فقاعة كلام كبيرة فيها مروحة من البطاقات، وحدة منها مسحوبة للخارج وجنبها مؤشر.",
       ),
     },
+    domains: ["Front-End", "UI", "Bilingual"],
     tags: [
       "React",
       "TypeScript",
@@ -427,43 +667,11 @@ export const projectsById: Record<string, ProjectCard> = {
   },
 
   /**
-   * Unfinished, and shown as such. `status` also quiets the card so it reads as
-   * work in progress rather than something being presented as done.
-   */
-  "fan-al-kabsa": {
-    id: "fan-al-kabsa",
-    eyebrow: L("Personal project", "مشروع شخصي"),
-    title: "Fan Al Kabsa",
-    titleLocalized: L("Fan Al Kabsa", "فن الكبسة"),
-    status: L("In progress", "قيد التطوير"),
-    ground: "pine",
-    summary: L(
-      "A restaurant simulation I'm building in Roblox.",
-      "لعبة محاكاة مطعم أبنيها في Roblox.",
-    ),
-    body: {
-      en: [
-        "A personal restaurant simulation built in Roblox Studio with Luau. It's an exploratory side project rather than something planned out in advance, and it isn't finished yet.",
-      ],
-      ar: [
-        "لعبة محاكاة مطعم شخصية مبنية في Roblox Studio باستخدام Luau. مشروع جانبي استكشافي أكثر من كونه شي مخطط له من البداية، وللحين ما اكتمل.",
-      ],
-    },
-    cover: {
-      src: "/projects/fan-al-kabsa/cover.jpg",
-      alt: L(
-        "A Roblox chef serving a plate of kabsa to a customer at a restaurant counter.",
-        "طباخ في Roblox يقدم صحن كبسة لزبون على طاولة مطعم.",
-      ),
-    },
-    tags: ["Roblox Studio", "Luau"],
-    // Screenshot pending.
-  },
-
-  /**
    * Journey-only. Reached from the XR bootcamp entry rather than the Work grid,
    * because it belongs to that experience rather than standing on its own.
    */
+
+
   "ar-recipe": {
     id: "ar-recipe",
     eyebrow: L("XR Bootcamp", "معسكر XR"),

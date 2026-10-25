@@ -85,10 +85,19 @@ export const experiencesById: Record<string, ExperienceEntry> = {
     startDate: L("May 2026", "مايو ٢٠٢٦"),
     endDate: L("Present", "الآن"),
     description: L(
-      "Contributing to the committee's technical programmes and bootcamp activities.",
-      "المشاركة في برامج اللجنة التقنية وأنشطة المعسكرات.",
+      "Teaching and running the committee's technical programmes and bootcamp activities.",
+      "تقديم برامج اللجنة التقنية وأنشطة المعسكرات والإشراف عليها.",
     ),
     highlights: [
+      {
+        id: "llm-program",
+        title: L("Large Language Models — 3-day programme", "برنامج النماذج اللغوية الكبيرة — ثلاثة أيام"),
+        date: L("25–27 October 2026 · in person", "٢٥–٢٧ أكتوبر ٢٠٢٦ · حضوري"),
+        description: L(
+          "I taught this one — three days, in person at the academy, taking the students through what actually happens inside a large language model rather than how to prompt one: tokenisation, embeddings, the query/key/value attention mechanism, and the path a piece of text takes through the stack.",
+          "أنا اللي درّستُه — ثلاثة أيام حضوريًا في مقر الأكاديمية، أخذت فيها الطالبات إلى داخل النموذج اللغوي الكبير نفسه بدل كيف تكتبين له أمرًا: التقطيع إلى توكنز، والتضمينات، وآلية الانتباه query/key/value، والمسار اللي يمشيه النص داخل الطبقات.",
+        ),
+      },
       {
         id: "intro-to-ai",
         title: L("Introduction to Artificial Intelligence", "برنامج مدخل إلى الذكاء الاصطناعي"),

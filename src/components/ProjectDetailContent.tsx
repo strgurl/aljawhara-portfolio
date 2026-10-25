@@ -31,12 +31,15 @@ export function ProjectDetailContent({ project, onOpenExperience }: ProjectDetai
       <p className="text-[13px] font-medium text-[var(--color-ink-secondary)]">{t(project.eyebrow)}</p>
       <h2 className="mt-1 text-[34px] font-semibold leading-tight tracking-tight text-[var(--color-ink)] lg:text-[44px]">
         {project.titleLocalized ? t(project.titleLocalized) : project.title}
-        {project.status && (
-          <span className="ms-3 align-middle text-[13px] font-medium text-[var(--color-ink-tertiary)]">
-            {t(project.status)}
-          </span>
-        )}
       </h2>
+      {/* Its own line rather than trailing the title inline: a Latin title
+          inside an RTL heading wraps, and an inline badge then lands in the
+          middle of the last line instead of after it. */}
+      {project.status && (
+        <p className="mt-1.5 text-[13px] font-medium text-[var(--color-ink-tertiary)]">
+          {t(project.status)}
+        </p>
+      )}
 
       {/* Every piece of media is optional and simply absent until supplied. */}
       {project.cover && (
@@ -63,9 +66,9 @@ export function ProjectDetailContent({ project, onOpenExperience }: ProjectDetai
             technologies list already uses, so nothing new is introduced. */}
         {project.sections?.map((section) => (
           <div key={section.heading.en} className="mt-5">
-            <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[var(--color-ink-tertiary)]">
+            <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[var(--color-ink-tertiary)]">
               {t(section.heading)}
-            </p>
+            </h3>
             <div className="flex flex-col gap-2.5">
               {t(section.paragraphs).map((paragraph, index) => (
                 <p key={index} className="text-[15px] leading-relaxed text-[var(--color-ink)]">

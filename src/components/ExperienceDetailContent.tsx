@@ -142,9 +142,9 @@ export function ExperienceDetailContent({
 
         {experience.skills?.length ? (
           <div className="mt-5">
-            <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[var(--color-ink-tertiary)]">
+            <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[var(--color-ink-tertiary)]">
               {t(sheet.skills)}
-            </p>
+            </h3>
             <TagList tags={experience.skills} />
           </div>
         ) : null}

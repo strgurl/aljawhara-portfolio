@@ -98,6 +98,31 @@ export interface ProjectCard {
    * quiets the card, so unfinished work doesn't compete with shipped work.
    */
   status?: Localized;
+  /**
+   * No detail worth opening yet, so the card is presented rather than offered.
+   * Separate from `status`: work can be unfinished and still have plenty to
+   * read, in which case it should quiet down but stay openable.
+   */
+  teaserOnly?: boolean;
+  /**
+   * One short, checkable result shown on the card face — the strongest piece
+   * of evidence a project has. Kept to a single line; anything longer belongs
+   * in the detail sheet.
+   *
+   * Currently unused: the results read better inside the sheet than on the
+   * card face. Kept because the treatment is built and costs nothing idle.
+   */
+  highlight?: Localized;
+  /**
+   * Two or three words naming what the project is *about* — RAG, VR, NLP —
+   * shown on the card face so someone scanning the row can tell whether a
+   * project is in their area before opening it. Domains, not the tech stack:
+   * `tags` already carries the stack, inside the sheet, and is longer and
+   * more specific than a card face can hold.
+   *
+   * Latin script in both locales, like `tags`, for the same reason.
+   */
+  domains?: string[];
   /** Technology names stay in Latin script by design. */
   tags?: string[];
   /** One unified section. Live demo, GitHub, SideQuest, anything external. */
